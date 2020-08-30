@@ -1,7 +1,5 @@
 package ch.talionis.rbx.engine.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 /**

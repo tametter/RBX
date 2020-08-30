@@ -46,8 +46,13 @@ public class Engine {
             }
         }
 
-        Block block = getInitialBlock(move);
+        int x = getInitialX(move);
+        int y = getInitialY(move);
 
+        while (canMove(x, y, move.getDirection())) {
+            // Iterate over all blocks in the direction of the move.
+
+        }
         // TODO
 
         return false;
@@ -66,12 +71,46 @@ public class Engine {
         return direction == RIGHT || direction == LEFT;
     }
 
-    private Block getInitialBlock(Move move) {
-        boolean isHorizontal = isHorizontal(move.getDirection());
+    private int getInitialX(Move move) {
+        return isHorizontal(move.getDirection()) ? (move.getDirection() == RIGHT ? 0 : state.getLevel().getWidth()) : move.getIndex();
+    }
 
-        int x = isHorizontal ? (move.getDirection() == RIGHT ? 0 : state.getLevel().getWidth()) : move.getIndex();
-        int y = isHorizontal ? move.getIndex() : (move.getDirection() == DOWN ? 0 : state.getLevel().getHeight());
+    private int getInitialY(Move move) {
+        return isHorizontal(move.getDirection()) ? move.getIndex() : (move.getDirection() == DOWN ? 0 : state.getLevel().getHeight());
+    }
 
-        return state.get(x, y);
+    private boolean canMove(int x, int y, Direction direction) {
+        switch (direction) {
+            case LEFT:
+                return x > 0;
+            case RIGHT:
+                return x < state.getLevel().getWidth() - 1;
+            case UP:
+                return y > 0;
+            default:
+                return y < state.getLevel().getHeight() - 1;
+        }
+    }
+
+    private int moveX(int x, Direction direction) {
+        switch (direction) {
+            case LEFT:
+                return x - 1;
+            case RIGHT:
+                return x + 1;
+            default:
+                return x;
+        }
+    }
+
+    private int moveY(int y, Direction direction) {
+        switch (direction) {
+            case UP:
+                return y - 1;
+            case DOWN:
+                return y + 1;
+            default:
+                return y;
+        }
     }
 }
