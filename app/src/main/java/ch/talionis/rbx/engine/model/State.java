@@ -1,5 +1,7 @@
 package ch.talionis.rbx.engine.model;
 
+import android.util.Pair;
+
 import java.util.Stack;
 
 /**
@@ -24,6 +26,17 @@ public class State {
 
     public Level getLevel() {
         return level;
+    }
+
+    public Pair<Integer, Integer> getPosition(Block block) {
+        for (int x = 0; x < level.getWidth(); x++) {
+            for (int y = 0; y < level.getHeight(); y++) {
+                if (currentBlocks[x][y] == block) {
+                    return new Pair<>(x, y);
+                }
+            }
+        }
+        throw new IllegalStateException("Failed to find position for block.");
     }
 
     public Move peek() {

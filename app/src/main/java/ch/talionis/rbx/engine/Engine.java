@@ -22,6 +22,10 @@ public class Engine {
         this.state = state;
     }
 
+    public State getState() {
+        return state;
+    }
+
     public boolean canUndo() {
         return state.peek() != null;
     }
