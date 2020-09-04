@@ -7,6 +7,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.State;
@@ -47,6 +48,10 @@ public class BlockLayout extends ViewGroup {
         int maxHorizontalBlockSize = width / numberOfHorizontalBlocks;
         int maxVerticalBlockSize = height / numberOfVerticalBlocks;
         int blockSize = Math.min(maxHorizontalBlockSize, maxVerticalBlockSize);
+
+        // Check if we can use the desired block size.
+        int desiredBlockSize = getContext().getResources().getDimensionPixelSize(R.dimen.block_size);
+        blockSize = Math.min(desiredBlockSize, blockSize);
 
         // Find the starting points for the rows and columns.
         int totalWidth = blockSize * numberOfHorizontalBlocks;
