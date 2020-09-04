@@ -2,7 +2,6 @@ package ch.talionis.rbx.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.State;
+
+import static ch.talionis.rbx.logging.Logger.logV;
 
 public class BlockLayout extends ViewGroup {
     private Engine engine;
@@ -74,9 +75,11 @@ public class BlockLayout extends ViewGroup {
             int y = position.second;
             int left = (int) (blockPaddingLeft + x * blockSize);
             int top = (int) (blockPaddingTop + y * blockSize);
+            int right = left + blockSize;
+            int bottom = top + blockSize;
 
-            Log.v("RBX", "Laying out block " + i + " at " + left + ", " + top);
-            blockView.layout(left, top, left + blockSize, top + blockSize);
+            logV(this, "Laying out block %d at (%d, %d - %d, %d)", i, left, top, right, bottom);
+            blockView.layout(left, top, right, bottom);
         }
     }
 }
