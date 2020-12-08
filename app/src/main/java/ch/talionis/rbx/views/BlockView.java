@@ -30,10 +30,10 @@ public class BlockView extends View {
                 paint.setColor(Color.DKGRAY);
                 break;
             case EMPTY:
-                paint.setColor(Color.LTGRAY);
+                paint.setColor(Color.parseColor("#B7CBC0"));
                 break;
             case MOVABLE:
-                paint.setColor(Color.RED);
+                paint.setColor(Color.parseColor("#FDC7AB"));
                 break;
         }
     }
