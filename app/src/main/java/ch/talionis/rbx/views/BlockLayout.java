@@ -15,6 +15,7 @@ import ch.talionis.rbx.engine.model.Coordinate;
 import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 
+import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
@@ -37,6 +38,24 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     public void setEngine(Engine engine) {
         this.engine = engine;
         this.engine.addObserver(this);
+    }
+
+    private void addViewsForState(State state) {
+        removeAllViews();
+
+        for (int x = 0; x < numberOfHorizontalBlocks; x++) {
+            for (int y = 0; y < numberOfVerticalBlocks; y++) {
+                Block block = state.get(x, y);
+
+                if (block.getType() == ABSENT) {
+                    continue;
+                }
+
+                BlockView blockView = new BlockView(getContext(), null);
+                blockView.setBlock(block);
+                addView(blockView);
+            }
+        }
     }
 
     @Override
@@ -120,19 +139,6 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         }
 
         return true;
-    }
-
-    private void addViewsForState(State state) {
-        removeAllViews();
-
-        for (int x = 0; x < numberOfHorizontalBlocks; x++) {
-            for (int y = 0; y < numberOfVerticalBlocks; y++) {
-                Block block = state.get(x, y);
-                BlockView blockView = new BlockView(getContext(), null);
-                blockView.setBlock(block);
-                addView(blockView);
-            }
-        }
     }
 
     @Override

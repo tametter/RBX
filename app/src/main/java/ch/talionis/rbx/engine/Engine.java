@@ -12,9 +12,11 @@ import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 
+import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.engine.model.Block.BlockType.MOVABLE;
 import static ch.talionis.rbx.engine.model.Block.BlockType.SOLID;
+import static ch.talionis.rbx.engine.model.Block.emptyBlock;
 
 /**
  * Operates on a state.
@@ -58,7 +60,7 @@ public class Engine {
             Coordinate currentBlockCoords = state.getPosition(currentBlock);
             currentBlock = getNeighborOrNull(currentBlockCoords, move.getDirection());
 
-            if (currentBlock == null || currentBlock.getType() == SOLID) {
+            if (currentBlock == null || currentBlock.getType() == SOLID || currentBlock.getType() == ABSENT) {
                 return false;
             } else if (currentBlock.getType() == EMPTY) {
                 return true;
@@ -82,7 +84,7 @@ public class Engine {
         }
 
         Map<Coordinate, Block> blocksToBeSet = new HashMap<>();
-        blocksToBeSet.put(getState().getPosition(firstMovingBlock), new Block(EMPTY));
+        blocksToBeSet.put(getState().getPosition(firstMovingBlock), emptyBlock());
 
         Coordinate position = getState().getPosition(firstMovingBlock);
         blocksToBeSet.put(position.move(move.getDirection()), firstMovingBlock);

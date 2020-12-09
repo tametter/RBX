@@ -10,19 +10,27 @@ import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.views.BlockLayout;
 
+import static ch.talionis.rbx.engine.model.Block.absentBlock;
+import static ch.talionis.rbx.engine.model.Block.emptyBlock;
+import static ch.talionis.rbx.engine.model.Block.endBlock;
+import static ch.talionis.rbx.engine.model.Block.normalConnector;
+import static ch.talionis.rbx.engine.model.Block.solidBlock;
+import static ch.talionis.rbx.engine.model.Block.startBlock;
+import static ch.talionis.rbx.engine.model.Direction.LEFT;
+import static ch.talionis.rbx.engine.model.Direction.RIGHT;
+import static ch.talionis.rbx.engine.model.Direction.UP;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Engine engine = new Engine();
         Level sampleLevel = new Level(new Block[][]{
-                {new Block(Block.BlockType.MOVABLE), new Block(Block.BlockType.SOLID), new Block(Block.BlockType.EMPTY)},
-                {new Block(Block.BlockType.MOVABLE), new Block(Block.BlockType.EMPTY), new Block(Block.BlockType.MOVABLE)},
-                {new Block(Block.BlockType.EMPTY), new Block(Block.BlockType.SOLID), new Block(Block.BlockType.SOLID)},
-                {new Block(Block.BlockType.SOLID), new Block(Block.BlockType.EMPTY), new Block(Block.BlockType.MOVABLE)}
+                {absentBlock(), startBlock(RIGHT), solidBlock(), absentBlock()},
+                {absentBlock(), normalConnector(LEFT, RIGHT), emptyBlock(), endBlock(LEFT)},
+                {emptyBlock(), emptyBlock(), solidBlock(), absentBlock()},
         });
 
         BlockLayout blockLayout = findViewById(R.id.block_layout);
