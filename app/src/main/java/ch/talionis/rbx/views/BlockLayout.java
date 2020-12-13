@@ -1,6 +1,7 @@
 package ch.talionis.rbx.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -41,6 +42,12 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     }
 
     private void addViewsForState(State state) {
+        if (engine.isComplete()) {
+            this.setBackgroundColor(Color.GREEN);
+        } else {
+            this.setBackgroundColor(Color.TRANSPARENT);
+        }
+
         removeAllViews();
 
         for (int x = 0; x < numberOfHorizontalBlocks; x++) {

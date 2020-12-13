@@ -1,5 +1,6 @@
 package ch.talionis.rbx.engine.model;
 
+import static ch.talionis.rbx.engine.model.Block.copy;
 import static ch.talionis.rbx.engine.model.Coordinate.coordinate;
 
 /**
@@ -15,7 +16,7 @@ public class State {
 
         for (int x = 0; x < level.getWidth(); x++) {
             for (int y = 0; y < level.getHeight(); y++) {
-                this.currentBlocks[x][y] = level.get(x, y);
+                this.currentBlocks[x][y] = copy(level.get(x, y));
             }
         }
     }

@@ -12,22 +12,31 @@ import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.engine.model.Block.BlockType.MOVABLE;
 import static ch.talionis.rbx.engine.model.Block.absentBlock;
 import static ch.talionis.rbx.engine.model.Block.emptyBlock;
+import static ch.talionis.rbx.engine.model.Block.endBlock;
 import static ch.talionis.rbx.engine.model.Block.normalConnector;
 import static ch.talionis.rbx.engine.model.Block.solidBlock;
+import static ch.talionis.rbx.engine.model.Block.startBlock;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
+import static ch.talionis.rbx.engine.model.Direction.RIGHT;
 import static ch.talionis.rbx.engine.model.Direction.UP;
 
 public class EngineTest {
     private static final Level SAMPLE_LEVEL = new Level(new Block[][]{
-            {normalConnector(LEFT, UP), solidBlock(), emptyBlock()},
+            {startBlock(UP), solidBlock(), emptyBlock()},
             {normalConnector(LEFT, UP), emptyBlock(), normalConnector(LEFT, UP)},
             {emptyBlock(), solidBlock(), solidBlock()},
-            {solidBlock(), emptyBlock(), normalConnector(LEFT, UP)}
+            {solidBlock(), emptyBlock(), endBlock(LEFT)}
     });
 
-    private static final Level SAMPLE_LEVEL_WITH_ABSENT = new Level(new Block[][]{{normalConnector(LEFT, UP), normalConnector(LEFT, UP), absentBlock(), normalConnector(LEFT, UP)}});
+    private static final Level SAMPLE_LEVEL_WITH_ABSENT = new Level(new Block[][]{{normalConnector(LEFT, UP), normalConnector(LEFT, UP), absentBlock(), endBlock(LEFT)}});
+    private static final Level SAMPLE_LEVEL_COMPLETE = new Level(new Block[][]{
+            {startBlock(RIGHT), emptyBlock()},
+            {emptyBlock(), normalConnector(LEFT, RIGHT)},
+            {endBlock(LEFT), emptyBlock()},
+    });
     private Engine engine;
     private Engine engine2;
+    private Engine engine3;
 
     @Before
     public void setUp() {
@@ -36,6 +45,9 @@ public class EngineTest {
 
         engine2 = new Engine();
         engine2.load(SAMPLE_LEVEL_WITH_ABSENT);
+
+        engine3 = new Engine();
+        engine3.load(SAMPLE_LEVEL_COMPLETE);
     }
 
     @Test
@@ -212,5 +224,20 @@ public class EngineTest {
         assert (engine.getState().get(0, 0).getType() == EMPTY);
         assert (engine.getState().get(1, 0).getType() == MOVABLE);
         assert (engine.getState().get(2, 0).getType() == MOVABLE);
+    }
+
+    @Test
+    public void isComplete_notComplete_returnsFalse() {
+        boolean isComplete = engine3.isComplete();
+
+        assert (!isComplete);
+    }
+
+    @Test
+    public void isComplete_complete_returnsTrue() {
+        engine3.apply(new Move(1,1, UP));
+        boolean isComplete = engine3.isComplete();
+
+        assert (isComplete);
     }
 }

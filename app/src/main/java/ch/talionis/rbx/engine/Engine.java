@@ -12,6 +12,9 @@ import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 
+import static ch.talionis.rbx.engine.model.Block.BlockConnectionType.END;
+import static ch.talionis.rbx.engine.model.Block.BlockConnectionType.NONE;
+import static ch.talionis.rbx.engine.model.Block.BlockConnectionType.START;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.engine.model.Block.BlockType.MOVABLE;
@@ -27,6 +30,7 @@ public class Engine {
 
     public void load(Level level) {
         state = new State(level);
+        calculatePowered();
         for (EngineObserver engineObserver : engineObservers) {
             engineObserver.onLevelLoaded();
         }
@@ -101,7 +105,84 @@ public class Engine {
             state.set(blockToBeSet.getKey().getX(), blockToBeSet.getKey().getY(), blockToBeSet.getValue());
         }
 
+        calculatePowered();
+
         notifyStateChanged();
+    }
+
+    public boolean isComplete() {
+        List<Block> blocksThatNeedToBePowered = getBlocksThatNeedToBePowered();
+        for (int i = 0; i < blocksThatNeedToBePowered.size(); i++) {
+            Block block = blocksThatNeedToBePowered.get(i);
+            if (!block.isPowered()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void calculatePowered() {
+        List<Block> blocksThatNeedToBePowered = getBlocksThatNeedToBePowered();
+
+        Block startBlock = null;
+        Block endBlock = null;
+
+        for (Block block : blocksThatNeedToBePowered) {
+            block.setPowered(false);
+            if (block.getConnectionType() == START) {
+                startBlock = block;
+            } else if (block.getConnectionType() == END) {
+                endBlock = block;
+            }
+        }
+
+        if (startBlock == null || endBlock == null) {
+            throw new IllegalStateException("Invalid level. Missing start or end block.");
+        }
+
+        List<Block> chain = new ArrayList<>();
+        chain.add(startBlock);
+
+        while (true) {
+            Block lastBlock = chain.get(chain.size() - 1);
+            Block currentBlock = getNeighborOrNull(state.getPosition(lastBlock), lastBlock.to());
+            if (currentBlock == null) {
+                break;
+            }
+
+            if (currentBlock.from() == null) {
+                break;
+            }
+
+            if (!lastBlock.to().connectsTo(currentBlock.from())) {
+                break;
+            }
+
+            chain.add(currentBlock);
+
+            if (currentBlock.getConnectionType() == END) {
+                break;
+            }
+        }
+
+        for (Block block : chain) {
+            block.setPowered(true);
+        }
+    }
+
+    private List<Block> getBlocksThatNeedToBePowered() {
+        int width = state.getLevel().getWidth();
+        int height = state.getLevel().getHeight();
+        List<Block> blocksThatNeedToBePowered = new ArrayList<>();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Block block = state.get(x, y);
+                if (block.getConnectionType() != NONE) {
+                    blocksThatNeedToBePowered.add(block);
+                }
+            }
+        }
+        return blocksThatNeedToBePowered;
     }
 
     private Block getNeighborOrNull(Coordinate coordinate, Direction direction) {

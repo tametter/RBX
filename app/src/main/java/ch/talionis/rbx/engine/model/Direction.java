@@ -20,4 +20,16 @@ public enum Direction {
             return UP;
         }
     }
+
+    public boolean connectsTo(Direction to) {
+        if (this == LEFT) {
+            return to == RIGHT;
+        } else if (this == RIGHT) {
+            return to == LEFT;
+        } else if (this == UP) {
+            return to == DOWN;
+        } else {
+            return to == UP;
+        }
+    }
 }

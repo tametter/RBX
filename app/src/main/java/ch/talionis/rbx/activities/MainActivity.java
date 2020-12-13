@@ -33,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 {emptyBlock(), emptyBlock(), solidBlock(), absentBlock()},
         });
 
+        /*
+        Level sampleLevel = new Level(new Block[][]{
+                {startBlock(RIGHT), emptyBlock()},
+                {emptyBlock(), normalConnector(LEFT, RIGHT)},
+                {endBlock(LEFT), emptyBlock()},
+        });*/
+
         BlockLayout blockLayout = findViewById(R.id.block_layout);
         blockLayout.setEngine(engine);
 

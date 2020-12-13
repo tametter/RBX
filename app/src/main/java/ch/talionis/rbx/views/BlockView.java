@@ -22,6 +22,7 @@ import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 public class BlockView extends View {
     private final Paint paint = new Paint(ANTI_ALIAS_FLAG);
     private final Paint lightPaint = new Paint(ANTI_ALIAS_FLAG);
+    private final Paint poweredPaint = new Paint(ANTI_ALIAS_FLAG);
     private Block block;
 
     public BlockView(Context context, @Nullable AttributeSet attrs) {
@@ -32,10 +33,12 @@ public class BlockView extends View {
         paint.setColor(Color.MAGENTA);
         paint.setStyle(FILL);
 
-        lightPaint.setStyle(FILL);
         lightPaint.setStyle(STROKE);
         lightPaint.setStrokeWidth(20);
         lightPaint.setColor(Color.parseColor("#99FFFFFF"));
+
+        poweredPaint.setStyle(FILL);
+        poweredPaint.setColor(Color.GREEN);
     }
 
     @Override
@@ -76,8 +79,11 @@ public class BlockView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
 
-        switch (block.getConnectionType()) {
+        if (block.isPowered()) {
+            canvas.drawCircle(20, 20, 10, poweredPaint);
+        }
 
+        switch (block.getConnectionType()) {
             case NONE:
                 break;
             case START:
