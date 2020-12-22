@@ -35,6 +35,8 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     public BlockLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClipChildren(false);
+        setClipToOutline(false);
+        setClipToPadding(false);
     }
 
     public void setEngine(Engine engine) {
@@ -58,6 +60,11 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
                 if (block.getType() == ABSENT) {
                     continue;
                 }
+
+                BlockBackgroundView blockBackgroundView = new BlockBackgroundView(getContext(), null);
+                blockBackgroundView.setCoordinate(x, y);
+                addView(blockBackgroundView);
+
 
                 BlockView blockView = new BlockView(getContext(), null);
                 blockView.setBlock(block);
@@ -94,22 +101,27 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         // Layout the blocks
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
-            if (!(child instanceof BlockView)) {
-                continue;
+            if (child instanceof BlockBackgroundView) {
+                BlockBackgroundView blockBackgroundView = (BlockBackgroundView) child;
+                layoutChildForGridPosition(child, blockBackgroundView.getCoordinate().getX(), blockBackgroundView.getCoordinate().getY(), blockPaddingLeft, blockPaddingTop, blockSize);
+            } else if (child instanceof BlockView) {
+                BlockView blockView = (BlockView) child;
+                Block block = blockView.getBlock();
+
+                Coordinate coordinate = engine.getState().getPosition(block);
+                layoutChildForGridPosition(blockView, coordinate.getX(), coordinate.getY(), blockPaddingLeft, blockPaddingTop, blockSize);
             }
-
-            BlockView blockView = (BlockView) child;
-            Block block = blockView.getBlock();
-
-            Coordinate coordinate = engine.getState().getPosition(block);
-            int left = (int) (blockPaddingLeft + coordinate.getX() * blockSize);
-            int top = (int) (blockPaddingTop + coordinate.getY() * blockSize);
-            int right = left + blockSize;
-            int bottom = top + blockSize;
-
-            logV(this, "Laying out block %d at (%d, %d - %d, %d)", i, left, top, right, bottom);
-            blockView.layout(left, top, right, bottom);
         }
+    }
+
+    private void layoutChildForGridPosition(View child, int x, int y, float blockPaddingLeft, float blockPaddingTop, int blockSize) {
+        int left = (int) (blockPaddingLeft + x * blockSize);
+        int top = (int) (blockPaddingTop + y * blockSize);
+        int right = left + blockSize;
+        int bottom = top + blockSize;
+
+        logV(this, "Laying out block %s at (%d, %d - %d, %d)", child, left, top, right, bottom);
+        child.layout(left, top, right, bottom);
     }
 
     @Override

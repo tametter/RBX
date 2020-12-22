@@ -22,6 +22,7 @@ import ch.talionis.rbx.functional.PathSupplier;
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.Paint.Style.FILL;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
+import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.logging.Logger.logV;
 
 public class BlockView extends FrameLayout {
@@ -32,11 +33,14 @@ public class BlockView extends FrameLayout {
         super(context, attrs);
 
         setLayerType(LAYER_TYPE_HARDWARE, null);
-//        setWillNotDraw(false);
+        setWillNotDraw(false);
         setClipChildren(false);
+        setClipToOutline(false);
+        setClipToPadding(false);
 
         poweredPaint.setStyle(FILL);
         poweredPaint.setColor(Color.GREEN);
+        setElevation(getResources().getDimension(R.dimen.background_elevation));
     }
 
     public void setBlock(Block block) {
@@ -44,9 +48,14 @@ public class BlockView extends FrameLayout {
             throw new IllegalArgumentException("Views for absent blocks make no sense.");
         }
 
+        this.block = block;
+
         removeAllViews();
 
-        this.block = block;
+        if (block.getType() == EMPTY) {
+            // Filled in by the layout
+            return;
+        }
 
         switch (block.getConnectionType()) {
             case NONE: {
@@ -97,7 +106,7 @@ public class BlockView extends FrameLayout {
 
         for (int i = 0; i < getChildCount(); i++) {
             PartView child = (PartView) getChildAt(i);
-            child.setElevation(getElevationForBlockType(block.getType()));
+            child.setElevation(getResources().getDimension(R.dimen.background_elevation));
             child.setPaintColor(getColorForBlockType(block.getType()));
         }
 
@@ -116,16 +125,6 @@ public class BlockView extends FrameLayout {
         }
     }
 
-    private int getElevationForBlockType(BlockType blockType) {
-        switch (blockType) {
-            case SOLID:
-            case EMPTY:
-                return 5;
-            default:
-                return 30;
-        }
-    }
-
     public Block getBlock() {
         return block;
     }
@@ -138,18 +137,18 @@ public class BlockView extends FrameLayout {
         }
     }
 
-    //    @Override
-//    protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-//
-//        if (block == null) {
-//            return;
-//        }
-//
-//        if (block.isPowered()) {
-//            canvas.drawCircle(20, 20, 10, poweredPaint);
-//        }
-//    }
+        @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (block == null) {
+            return;
+        }
+
+        if (block.isPowered()) {
+            canvas.drawCircle(0.5f * getWidth(), 0.5f * getHeight(), 10, poweredPaint);
+        }
+    }
 
     private static class PartView extends View {
         protected final Paint paint = new Paint(ANTI_ALIAS_FLAG);
@@ -160,7 +159,6 @@ public class BlockView extends FrameLayout {
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
             paint.setColor(Color.MAGENTA);
             paint.setStyle(FILL);
-            setElevation(10);
         }
 
         @Override
