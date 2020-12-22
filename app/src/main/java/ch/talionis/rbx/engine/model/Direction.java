@@ -32,4 +32,8 @@ public enum Direction {
             return to == UP;
         }
     }
+
+    public boolean isOpposite(Direction to) {
+        return connectsTo(to);
+    }
 }

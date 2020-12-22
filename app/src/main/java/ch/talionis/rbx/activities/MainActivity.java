@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.model.Block;
+import ch.talionis.rbx.engine.model.Direction;
 import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.views.BlockLayout;
+import ch.talionis.rbx.views.BlockView;
 
 import static ch.talionis.rbx.engine.model.Block.absentBlock;
 import static ch.talionis.rbx.engine.model.Block.emptyBlock;
@@ -44,5 +46,8 @@ public class MainActivity extends AppCompatActivity {
         blockLayout.setEngine(engine);
 
         engine.load(sampleLevel);
+//
+//        BlockView blockView = findViewById(R.id.block_view);
+//        blockView.setBlock(Block.endBlock(RIGHT));
     }
 }

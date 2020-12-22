@@ -3,25 +3,28 @@ package ch.talionis.rbx.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.model.Block;
-import ch.talionis.rbx.engine.model.Direction;
+import ch.talionis.rbx.engine.model.Block.BlockType;
+import ch.talionis.rbx.functional.PathSupplier;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.Paint.Style.FILL;
-import static android.graphics.Paint.Style.STROKE;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
+import static ch.talionis.rbx.logging.Logger.logV;
 
-public class BlockView extends View {
-    private final Paint paint = new Paint(ANTI_ALIAS_FLAG);
-    private final Paint lightPaint = new Paint(ANTI_ALIAS_FLAG);
+public class BlockView extends FrameLayout {
     private final Paint poweredPaint = new Paint(ANTI_ALIAS_FLAG);
     private Block block;
 
@@ -29,23 +32,11 @@ public class BlockView extends View {
         super(context, attrs);
 
         setLayerType(LAYER_TYPE_HARDWARE, null);
-
-        paint.setColor(Color.MAGENTA);
-        paint.setStyle(FILL);
-
-        lightPaint.setStyle(STROKE);
-        lightPaint.setStrokeWidth(20);
-        lightPaint.setColor(Color.parseColor("#99FFFFFF"));
+//        setWillNotDraw(false);
+        setClipChildren(false);
 
         poweredPaint.setStyle(FILL);
         poweredPaint.setColor(Color.GREEN);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        setOutlineProvider(ViewOutlineProvider.BOUNDS);
     }
 
     public void setBlock(Block block) {
@@ -53,21 +44,85 @@ public class BlockView extends View {
             throw new IllegalArgumentException("Views for absent blocks make no sense.");
         }
 
+        removeAllViews();
+
         this.block = block;
 
-        switch (block.getType()) {
+        switch (block.getConnectionType()) {
+            case NONE: {
+                // TODO: rotation
+                PartView partView = new PartView(getContext(), null);
+                partView.setPathSupplier(BlockViewPathGenerator::none);
+                addView(partView);
+                break;
+            }
+            case START: {
+                // TODO: rotation
+                PartView partView = new PartView(getContext(), null);
+                partView.setPathSupplier(BlockViewPathGenerator::start);
+                addView(partView);
+                break;
+            }
+            case END: {
+                //TODO: rotation
+                PartView partView = new PartView(getContext(), null);
+                partView.setPathSupplier(BlockViewPathGenerator::end);
+                addView(partView);
+                break;
+            }
+            case NORMAL: {
+                //TODO: rotation
+                if (block.from().isOpposite(block.to())) {
+                    // A line
+                    PartView partView = new PartView(getContext(), null);
+                    partView.setPathSupplier(BlockViewPathGenerator::lineTop);
+                    addView(partView);
+
+                    partView = new PartView(getContext(), null);
+                    partView.setPathSupplier(BlockViewPathGenerator::lineBottom);
+                    addView(partView);
+                } else {
+                    // A corner
+                    PartView partView = new PartView(getContext(), null);
+                    partView.setPathSupplier(BlockViewPathGenerator::cornerLarge);
+                    addView(partView);
+
+                    partView = new PartView(getContext(), null);
+                    partView.setPathSupplier(BlockViewPathGenerator::cornerSmall);
+                    addView(partView);
+                }
+                break;
+            }
+        }
+
+        for (int i = 0; i < getChildCount(); i++) {
+            PartView child = (PartView) getChildAt(i);
+            child.setElevation(getElevationForBlockType(block.getType()));
+            child.setPaintColor(getColorForBlockType(block.getType()));
+        }
+
+        invalidate();
+    }
+
+    private int getColorForBlockType(BlockType blockType) {
+        logV(this, "BlockType " + blockType);
+        switch (blockType) {
             case SOLID:
-                paint.setColor(getResources().getColor(R.color.block_solid));
-                setElevation(5);
-                break;
+                return getResources().getColor(R.color.block_solid);
             case EMPTY:
-                paint.setColor(getResources().getColor(R.color.block_empty));
-                setElevation(5);
-                break;
-            case MOVABLE:
-                paint.setColor(getResources().getColor(R.color.block_movable));
-                setElevation(30);
-                break;
+                return getResources().getColor(R.color.block_empty);
+            default:
+                return getResources().getColor(R.color.block_movable);
+        }
+    }
+
+    private int getElevationForBlockType(BlockType blockType) {
+        switch (blockType) {
+            case SOLID:
+            case EMPTY:
+                return 5;
+            default:
+                return 30;
         }
     }
 
@@ -76,59 +131,65 @@ public class BlockView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
-
-        if (block.isPowered()) {
-            canvas.drawCircle(20, 20, 10, poweredPaint);
-        }
-
-        switch (block.getConnectionType()) {
-            case NONE:
-                break;
-            case START:
-                drawStartCircle(canvas);
-                drawLineSegment(canvas, block.to());
-                break;
-            case END:
-                drawEndSquare(canvas);
-                drawLineSegment(canvas, block.from());
-                break;
-            case NORMAL:
-                drawLineSegment(canvas, block.from());
-                drawLineSegment(canvas, block.to());
-                break;
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        for (int i = 0; i < getChildCount(); i++) {
+            PartView child = (PartView) getChildAt(i);
+            child.layout(0, 0, getWidth(), getHeight());
         }
     }
 
-    private void drawStartCircle(Canvas canvas) {
-        canvas.drawCircle(0.5f * getWidth(), 0.5f * getHeight(), 0.1f * getWidth(), lightPaint);
-    }
+    //    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//
+//        if (block == null) {
+//            return;
+//        }
+//
+//        if (block.isPowered()) {
+//            canvas.drawCircle(20, 20, 10, poweredPaint);
+//        }
+//    }
 
-    private void drawEndSquare(Canvas canvas) {
-        float halfWidth = (float) (getWidth() * 0.1);
-        canvas.drawRect(0.5f * getWidth() - halfWidth, 0.5f * getHeight() - halfWidth, 0.5f * getWidth() + halfWidth, 0.5f * getHeight() + halfWidth, lightPaint);
-    }
+    private static class PartView extends View {
+        protected final Paint paint = new Paint(ANTI_ALIAS_FLAG);
+        private PathSupplier pathSupplier;
 
-    private void drawLineSegment(Canvas canvas, Direction direction) {
-        float endX = 0.5f * getWidth();
-        float endY = 0.5f * getHeight();
-
-        switch (direction) {
-            case LEFT:
-                endX = 0;
-                break;
-            case RIGHT:
-                endX = getWidth();
-                break;
-            case UP:
-                endY = 0;
-                break;
-            case DOWN:
-                endY = getHeight();
-                break;
+        public PartView(Context context, @Nullable AttributeSet attrs) {
+            super(context, attrs);
+            setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            paint.setColor(Color.MAGENTA);
+            paint.setStyle(FILL);
+            setElevation(10);
         }
 
-        canvas.drawLine(0.5f * getWidth(), 0.5f * getHeight(), endX, endY, lightPaint);
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+            setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setConvexPath(pathSupplier.getPath(getWidth(), getHeight()));
+                }
+            });
+        }
+
+        public void setPaintColor(int color) {
+            paint.setColor(color);
+        }
+
+        public void setPathSupplier(PathSupplier pathSupplier) {
+            this.pathSupplier = pathSupplier;
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            if (pathSupplier != null) {
+                // Memoize the path
+                canvas.drawPath(pathSupplier.getPath(getWidth(), getHeight()), paint);
+            }
+        }
     }
 }

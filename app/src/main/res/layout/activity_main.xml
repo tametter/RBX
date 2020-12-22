@@ -17,4 +17,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ch.talionis.rbx.views.BlockView
+        android:id="@+id/block_view"
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="100dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

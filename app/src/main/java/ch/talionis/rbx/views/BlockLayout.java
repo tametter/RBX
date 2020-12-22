@@ -34,6 +34,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
 
     public BlockLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setClipChildren(false);
     }
 
     public void setEngine(Engine engine) {
@@ -67,6 +68,10 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if (getChildCount() == 0) {
+            return;
+        }
+
         // Get layout size
         int width = r - l;
         int height = b - t;
