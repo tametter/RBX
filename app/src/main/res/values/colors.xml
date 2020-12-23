@@ -4,9 +4,9 @@
     <color name="colorPrimaryDark">#9f5125</color>
     <color name="colorAccent">#9f5125</color>
 
-    <color name="bg_gradient_bottom">#e8e8e8</color>
-    <color name="bg_gradient_center">#e8e8e8</color>
-    <color name="bg_gradient_top">#e8e8e8</color>
+    <color name="bg_gradient_bottom">#66720B98</color>
+    <color name="bg_gradient_center">#61391E94</color>
+    <color name="bg_gradient_top">#6A0037A5</color>
 
     <color name="block_solid">#555555</color>
     <color name="block_empty">#f4f4f2</color>

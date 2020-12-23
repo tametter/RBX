@@ -17,6 +17,7 @@ import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
+import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
@@ -35,7 +36,6 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     public BlockLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClipChildren(false);
-        setClipToOutline(false);
         setClipToPadding(false);
     }
 
@@ -48,11 +48,12 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         if (engine.isComplete()) {
             this.setBackgroundColor(Color.GREEN);
         } else {
-            this.setBackgroundColor(Color.TRANSPARENT);
+//            this.setBackgroundColor(Color.TRANSPARENT);
         }
 
         removeAllViews();
 
+        // Add background views
         for (int x = 0; x < numberOfHorizontalBlocks; x++) {
             for (int y = 0; y < numberOfVerticalBlocks; y++) {
                 Block block = state.get(x, y);
@@ -64,11 +65,24 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
                 BlockBackgroundView blockBackgroundView = new BlockBackgroundView(getContext(), null);
                 blockBackgroundView.setCoordinate(x, y);
                 addView(blockBackgroundView);
+            }
+        }
 
+        // Add blocks
+        for (int x = 0; x < numberOfHorizontalBlocks; x++) {
+            for (int y = 0; y < numberOfVerticalBlocks; y++) {
+                Block block = state.get(x, y);
 
-                BlockView blockView = new BlockView(getContext(), null);
-                blockView.setBlock(block);
-                addView(blockView);
+                if (block.getType() == ABSENT) {
+                    continue;
+                }
+
+                if (block.getType() != EMPTY) {
+                    BlockView blockView = new BlockView(getContext(), null);
+                    blockView.setBlock(block);
+                    blockView.setPadding(20, 20, 20, 20);
+                    addView(blockView);
+                }
             }
         }
     }
@@ -103,6 +117,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
             View child = getChildAt(i);
             if (child instanceof BlockBackgroundView) {
                 BlockBackgroundView blockBackgroundView = (BlockBackgroundView) child;
+                blockBackgroundView.setPadding(0, 0, 0, 0);
                 layoutChildForGridPosition(child, blockBackgroundView.getCoordinate().getX(), blockBackgroundView.getCoordinate().getY(), blockPaddingLeft, blockPaddingTop, blockSize);
             } else if (child instanceof BlockView) {
                 BlockView blockView = (BlockView) child;
@@ -119,6 +134,12 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         int top = (int) (blockPaddingTop + y * blockSize);
         int right = left + blockSize;
         int bottom = top + blockSize;
+
+        // Enlarge to account for padding (for elevation shadows)
+        left = left - child.getPaddingLeft();
+        top = top - child.getPaddingTop();
+        right = right + child.getPaddingRight();
+        bottom = bottom + child.getPaddingBottom();
 
         logV(this, "Laying out block %s at (%d, %d - %d, %d)", child, left, top, right, bottom);
         child.layout(left, top, right, bottom);

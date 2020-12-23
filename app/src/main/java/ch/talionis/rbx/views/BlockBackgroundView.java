@@ -2,7 +2,6 @@ package ch.talionis.rbx.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.util.AttributeSet;

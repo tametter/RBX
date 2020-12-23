@@ -5,9 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
@@ -17,6 +15,7 @@ import androidx.annotation.Nullable;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Block.BlockType;
+import ch.talionis.rbx.engine.model.Direction;
 import ch.talionis.rbx.functional.PathSupplier;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
@@ -35,7 +34,6 @@ public class BlockView extends FrameLayout {
         setLayerType(LAYER_TYPE_HARDWARE, null);
         setWillNotDraw(false);
         setClipChildren(false);
-        setClipToOutline(false);
         setClipToPadding(false);
 
         poweredPaint.setStyle(FILL);
@@ -44,8 +42,8 @@ public class BlockView extends FrameLayout {
     }
 
     public void setBlock(Block block) {
-        if (block.getType() == ABSENT) {
-            throw new IllegalArgumentException("Views for absent blocks make no sense.");
+        if (block.getType() == ABSENT || block.getType() == EMPTY) {
+            throw new IllegalArgumentException("Views for absent or empty blocks make no sense.");
         }
 
         this.block = block;
@@ -59,23 +57,22 @@ public class BlockView extends FrameLayout {
 
         switch (block.getConnectionType()) {
             case NONE: {
-                // TODO: rotation
                 PartView partView = new PartView(getContext(), null);
                 partView.setPathSupplier(BlockViewPathGenerator::none);
                 addView(partView);
                 break;
             }
             case START: {
-                // TODO: rotation
                 PartView partView = new PartView(getContext(), null);
                 partView.setPathSupplier(BlockViewPathGenerator::start);
+                partView.setRotation(getRotationForDirection(block.to()));
                 addView(partView);
                 break;
             }
             case END: {
-                //TODO: rotation
                 PartView partView = new PartView(getContext(), null);
                 partView.setPathSupplier(BlockViewPathGenerator::end);
+                partView.setRotation(getRotationForDirection(block.from()));
                 addView(partView);
                 break;
             }
@@ -85,19 +82,23 @@ public class BlockView extends FrameLayout {
                     // A line
                     PartView partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::lineTop);
+                    partView.setRotation(getRotationForDirection(block.to()));
                     addView(partView);
 
                     partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::lineBottom);
+                    partView.setRotation(getRotationForDirection(block.to()));
                     addView(partView);
                 } else {
                     // A corner
                     PartView partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerLarge);
+                    partView.setRotation(getRotationForDirection(block.from().inverse()));
                     addView(partView);
 
                     partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerSmall);
+                    partView.setRotation(getRotationForDirection(block.from().inverse()));
                     addView(partView);
                 }
                 break;
@@ -109,8 +110,6 @@ public class BlockView extends FrameLayout {
             child.setElevation(getResources().getDimension(R.dimen.background_elevation));
             child.setPaintColor(getColorForBlockType(block.getType()));
         }
-
-        invalidate();
     }
 
     private int getColorForBlockType(BlockType blockType) {
@@ -125,6 +124,19 @@ public class BlockView extends FrameLayout {
         }
     }
 
+    private float getRotationForDirection(Direction direction) {
+        switch (direction) {
+            case LEFT:
+                return 180;
+            case RIGHT:
+                return 0;
+            case UP:
+                return 270;
+            default:
+                return 90;
+        }
+    }
+
     public Block getBlock() {
         return block;
     }
@@ -133,11 +145,11 @@ public class BlockView extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         for (int i = 0; i < getChildCount(); i++) {
             PartView child = (PartView) getChildAt(i);
-            child.layout(0, 0, getWidth(), getHeight());
+            child.layout(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(), getHeight() - getPaddingBottom());
         }
     }
 
-        @Override
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -167,6 +179,7 @@ public class BlockView extends FrameLayout {
             setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
+
                     outline.setConvexPath(pathSupplier.getPath(getWidth(), getHeight()));
                 }
             });

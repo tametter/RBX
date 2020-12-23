@@ -7,10 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.model.Block;
-import ch.talionis.rbx.engine.model.Direction;
 import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.views.BlockLayout;
-import ch.talionis.rbx.views.BlockView;
 
 import static ch.talionis.rbx.engine.model.Block.absentBlock;
 import static ch.talionis.rbx.engine.model.Block.emptyBlock;
@@ -20,7 +18,6 @@ import static ch.talionis.rbx.engine.model.Block.solidBlock;
 import static ch.talionis.rbx.engine.model.Block.startBlock;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
-import static ch.talionis.rbx.engine.model.Direction.UP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,18 +32,20 @@ public class MainActivity extends AppCompatActivity {
                 {emptyBlock(), emptyBlock(), solidBlock(), absentBlock()},
         });
 
-        /*
-        Level sampleLevel = new Level(new Block[][]{
-                {startBlock(RIGHT), emptyBlock()},
-                {emptyBlock(), normalConnector(LEFT, RIGHT)},
-                {endBlock(LEFT), emptyBlock()},
-        });*/
+
+//        Level sampleLevel = new Level(new Block[][]{
+//                {startBlock(LEFT), startBlock(UP), startBlock(RIGHT), startBlock(DOWN)},
+//                {endBlock(LEFT), endBlock(UP), endBlock(RIGHT), endBlock(DOWN)},
+//                {normalConnector(LEFT, RIGHT), normalConnector(DOWN, UP), normalConnector(RIGHT, LEFT), normalConnector(UP, DOWN)},
+//                {normalConnector(LEFT, DOWN), normalConnector(DOWN, RIGHT), normalConnector(RIGHT, UP), normalConnector(UP, LEFT)},
+//                {absentBlock(), emptyBlock(), absentBlock(), absentBlock()},
+//        });
 
         BlockLayout blockLayout = findViewById(R.id.block_layout);
         blockLayout.setEngine(engine);
 
         engine.load(sampleLevel);
-//
+
 //        BlockView blockView = findViewById(R.id.block_view);
 //        blockView.setBlock(Block.endBlock(RIGHT));
     }

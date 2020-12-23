@@ -2,5 +2,5 @@
 <resources>
     <dimen name="background_elevation">4dp</dimen>
     <dimen name="part_elevation">4dp</dimen>
-    <dimen name="block_size">64dp</dimen>
+    <dimen name="block_size">82dp</dimen>
 </resources>
