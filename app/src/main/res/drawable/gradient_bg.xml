@@ -4,5 +4,5 @@
         android:startColor="@color/bg_gradient_top"
         android:centerColor="@color/bg_gradient_center"
         android:endColor="@color/bg_gradient_bottom"
-        android:angle="270"/>
+        android:angle="220"/>
 </shape>
