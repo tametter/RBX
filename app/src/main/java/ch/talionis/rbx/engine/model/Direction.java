@@ -33,6 +33,14 @@ public enum Direction {
         }
     }
 
+    public boolean isHorizontal() {
+        return this == LEFT || this == RIGHT;
+    }
+
+    public boolean isVertical() {
+        return !this.isHorizontal();
+    }
+
     public boolean isOpposite(Direction to) {
         return connectsTo(to);
     }

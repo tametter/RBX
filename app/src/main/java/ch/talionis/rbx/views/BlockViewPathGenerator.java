@@ -95,18 +95,12 @@ class BlockViewPathGenerator {
     }
 
     static Path none(int width, int height) {
-        float roundRectRadius = width * roundRectRadiusFactor;
-
         Path path = new Path();
         path.setLastPoint(0.5f * width, 0);
-        path.lineTo(width - roundRectRadius, 0);
-        path.arcTo(width - roundRectRadius, 0, width, roundRectRadius, 270, 90, false);
-        path.lineTo(width, height - roundRectRadius);
-        path.arcTo(width - roundRectRadius, height - roundRectRadius, width, height, 0, 90, false);
-        path.lineTo(roundRectRadius, height);
-        path.arcTo(0, height - roundRectRadius, roundRectRadius, height, 90, 90, false);
-        path.lineTo(0, roundRectRadius);
-        path.arcTo(0, 0, roundRectRadius, roundRectRadius, 180, 90, false);
+        path.lineTo(width, 0);
+        path.lineTo(width, height);
+        path.lineTo(0, height);
+        path.lineTo(0, 0);
         return path;
     }
 
