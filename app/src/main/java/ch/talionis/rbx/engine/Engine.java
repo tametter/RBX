@@ -77,15 +77,7 @@ public class Engine {
             throw new IllegalArgumentException("Invalid move.");
         }
 
-        Direction inverseDirection = move.getDirection().inverse();
         Block firstMovingBlock = state.get(move.getX(), move.getY());
-        while (true) {
-            Block preceedingBlock = getNeighborOrNull(getState().getPosition(firstMovingBlock), inverseDirection);
-            if (preceedingBlock == null || preceedingBlock.getType() != MOVABLE) {
-                break;
-            }
-            firstMovingBlock = preceedingBlock;
-        }
 
         Map<Coordinate, Block> blocksToBeSet = new HashMap<>();
         blocksToBeSet.put(getState().getPosition(firstMovingBlock), emptyBlock());
