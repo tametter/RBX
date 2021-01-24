@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Engine engine = new Engine();
-        Level sampleLevel = new Level(new Block[][]{
-                {absentBlock(), startBlock(RIGHT), solidBlock(), absentBlock()},
-                {absentBlock(), normalConnector(LEFT, RIGHT), emptyBlock(), endBlock(LEFT)},
-                {emptyBlock(), emptyBlock(), solidBlock(), absentBlock()},
-        });
+//        Level sampleLevel = new Level(new Block[][]{
+//                {absentBlock(), startBlock(RIGHT), solidBlock(), absentBlock()},
+//                {absentBlock(), normalConnector(LEFT, RIGHT), emptyBlock(), endBlock(LEFT)},
+//                {emptyBlock(), emptyBlock(), solidBlock(), absentBlock()},
+//        });
 
 
 //        Level sampleLevel = new Level(new Block[][]{
@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
 //                {normalConnector(LEFT, DOWN), normalConnector(DOWN, RIGHT), normalConnector(RIGHT, UP), normalConnector(UP, LEFT)},
 //                {absentBlock(), emptyBlock(), absentBlock(), absentBlock()},
 //        });
+
+        Level sampleLevel = new Level(new Block[][]{
+                {absentBlock(), startBlock(RIGHT)},
+                {endBlock(LEFT), normalConnector(LEFT, RIGHT)},
+                {emptyBlock(), emptyBlock()},
+        });
 
         BlockLayout blockLayout = findViewById(R.id.block_layout);
         blockLayout.setEngine(engine);

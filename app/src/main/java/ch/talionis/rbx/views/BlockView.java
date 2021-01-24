@@ -13,8 +13,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 
 import ch.talionis.rbx.R;
+import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Block.BlockType;
+import ch.talionis.rbx.engine.model.Coordinate;
 import ch.talionis.rbx.engine.model.Direction;
 import ch.talionis.rbx.functional.PathSupplier;
 
@@ -24,9 +26,10 @@ import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
 import static ch.talionis.rbx.logging.Logger.logV;
 
-public class BlockView extends FrameLayout {
+public class BlockView extends FrameLayout implements ViewWithCoordinate {
     private final Paint poweredPaint = new Paint(ANTI_ALIAS_FLAG);
     private Block block;
+    private Engine engine;
 
     public BlockView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -160,6 +163,15 @@ public class BlockView extends FrameLayout {
         if (block.isPowered()) {
             canvas.drawCircle(0.5f * getWidth(), 0.5f * getHeight(), 10, poweredPaint);
         }
+    }
+
+    @Override
+    public Coordinate getCoordinate() {
+        return engine.getState().getPosition(block);
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
     }
 
     private static class PartView extends View {

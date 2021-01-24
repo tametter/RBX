@@ -1,5 +1,7 @@
 package ch.talionis.rbx.engine.model;
 
+import androidx.annotation.Nullable;
+
 import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
@@ -36,5 +38,15 @@ public class Coordinate {
 
     public static Coordinate coordinate(int x, int y) {
         return new Coordinate(x, y);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+         if (!(obj instanceof Coordinate)) {
+             return false;
+         }
+
+         Coordinate other = (Coordinate) obj;
+         return x == other.getX() && y == other.getY();
     }
 }

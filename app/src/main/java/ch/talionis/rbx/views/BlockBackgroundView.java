@@ -15,7 +15,7 @@ import ch.talionis.rbx.engine.model.Coordinate;
 
 import static ch.talionis.rbx.engine.model.Coordinate.coordinate;
 
-public class BlockBackgroundView extends View {
+public class BlockBackgroundView extends View implements ViewWithCoordinate {
     Paint backgroundPaint;
     private int x;
     private int y;
@@ -48,6 +48,7 @@ public class BlockBackgroundView extends View {
         this.y = y;
     }
 
+    @Override
     public Coordinate getCoordinate() {
         return coordinate(x, y);
     }

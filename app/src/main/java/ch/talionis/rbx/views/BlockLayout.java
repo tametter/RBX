@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import ch.talionis.rbx.functional.AnimationListener;
 
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
+import static ch.talionis.rbx.engine.model.Coordinate.coordinate;
 import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
@@ -54,7 +56,8 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
 
     private void addViewsForState(State state) {
         if (engine.isComplete()) {
-            this.setBackgroundColor(Color.GREEN);
+            animateOut();
+            return;
         } else {
 //            this.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -87,6 +90,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
 
                 if (block.getType() != EMPTY) {
                     BlockView blockView = new BlockView(getContext(), null);
+                    blockView.setEngine(engine);
                     blockView.setBlock(block);
                     blockView.setPadding(20, 20, 20, 20);
                     addView(blockView);
@@ -177,13 +181,13 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
                 return true;
             }
             if (deltaX > 100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT))) {
-                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT));
+                animateMove(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT));
             } else if (deltaX < -100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT))) {
-                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT));
+                animateMove(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT));
             } else if (deltaY > 100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN))) {
-                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN));
+                animateMove(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN));
             } else if (deltaY < -100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP))) {
-                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP));
+                animateMove(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP));
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
             touchX = 0;
@@ -193,7 +197,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         return true;
     }
 
-    private void animate(Move move) {
+    private void animateMove(Move move) {
         touchBlockCoords = null;
         String propertyName = move.getDirection().isHorizontal() ? "translationX" : "translationY";
         float moveMultiplier = move.getDirection() == LEFT || move.getDirection() == UP ? -1 : 1;
@@ -215,6 +219,56 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         AnimationListener.onAnimationEnd(animatorSet, () -> engine.apply(move));
 
         animatorSet.start();
+    }
+
+    private void animateOut() {
+        logV(this, "Animating out");
+        int width = engine.getState().getLevel().getWidth();
+        int height = engine.getState().getLevel().getHeight();
+
+        List<Coordinate> coordinates = new ArrayList<>();
+        for (int x=0; x<width;x++) {
+            for (int y=0; y<height;y++) {
+                coordinates.add(coordinate(x, y));
+            }
+        }
+
+        Collections.shuffle(coordinates);
+
+        long delay = 0;
+        for (Coordinate coordinate : coordinates) {
+            List<View> viewsAtCoordinate = new ArrayList<>();
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+
+                if (child instanceof ViewWithCoordinate) {
+                    ViewWithCoordinate viewWithCoordinate = (ViewWithCoordinate) child;
+                    if (viewWithCoordinate.getCoordinate().equals(coordinate)) {
+                        viewsAtCoordinate.add(child);
+                    }
+                }
+            }
+
+            if (viewsAtCoordinate.size() == 0) {
+                continue;
+            }
+
+            List<Animator> animators = new ArrayList<>();
+            for (View view : viewsAtCoordinate) {
+                animators.add(ObjectAnimator.ofFloat(view, "elevation", view.getElevation(), 20));
+                animators.add(ObjectAnimator.ofFloat(view, "alpha", 1, 0));
+                animators.add(ObjectAnimator.ofFloat(view, "scaleX", 1, 1.8f));
+                animators.add(ObjectAnimator.ofFloat(view, "scaleY", 1, 1.8f));
+            }
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.setDuration(400);
+            animatorSet.setStartDelay(delay);
+            delay = delay + 100;
+            animatorSet.playTogether(animators);
+
+            animatorSet.start();
+        }
     }
 
     @Override
