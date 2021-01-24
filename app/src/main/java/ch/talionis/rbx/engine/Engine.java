@@ -72,11 +72,7 @@ public class Engine {
         }
     }
 
-    public void apply(Move move) {
-        if (!isValid(move)) {
-            throw new IllegalArgumentException("Invalid move.");
-        }
-
+    public Map<Coordinate, Block> getBlocksThatWillMove(Move move) {
         Block firstMovingBlock = state.get(move.getX(), move.getY());
 
         Map<Coordinate, Block> blocksToBeSet = new HashMap<>();
@@ -93,7 +89,15 @@ public class Engine {
             blocksToBeSet.put(position.move(move.getDirection()), neighborOrNull);
         }
 
-        for (Map.Entry<Coordinate, Block> blockToBeSet : blocksToBeSet.entrySet()) {
+        return blocksToBeSet;
+    }
+
+    public void apply(Move move) {
+        if (!isValid(move)) {
+            throw new IllegalArgumentException("Invalid move.");
+        }
+
+        for (Map.Entry<Coordinate, Block> blockToBeSet : getBlocksThatWillMove(move).entrySet()) {
             state.set(blockToBeSet.getKey().getX(), blockToBeSet.getKey().getY(), blockToBeSet.getValue());
         }
 

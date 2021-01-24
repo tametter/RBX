@@ -1,5 +1,8 @@
 package ch.talionis.rbx.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -8,6 +11,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
 import ch.talionis.rbx.engine.EngineObserver;
@@ -15,6 +22,7 @@ import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Coordinate;
 import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
+import ch.talionis.rbx.functional.AnimationListener;
 
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
@@ -28,10 +36,10 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     private Engine engine;
     private int numberOfVerticalBlocks;
     private int numberOfHorizontalBlocks;
-    private BlockView touchBlockView;
     private Coordinate touchBlockCoords;
     private int touchX;
     private int touchY;
+    private int blockSize;
 
     public BlockLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,7 +108,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         // Calculate the block size
         int maxHorizontalBlockSize = width / numberOfHorizontalBlocks;
         int maxVerticalBlockSize = height / numberOfVerticalBlocks;
-        int blockSize = Math.min(maxHorizontalBlockSize, maxVerticalBlockSize);
+        blockSize = Math.min(maxHorizontalBlockSize, maxVerticalBlockSize);
 
         // Check if we can use the desired block size.
         int desiredBlockSize = getContext().getResources().getDimensionPixelSize(R.dimen.block_size);
@@ -154,7 +162,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
                 if (child instanceof BlockView) {
                     child.getHitRect(hitRect);
                     if (hitRect.contains((int) event.getX(), (int) event.getY())) {
-                        touchBlockView = (BlockView) child;
+                        BlockView touchBlockView = (BlockView) child;
                         touchBlockCoords = engine.getState().getPosition(touchBlockView.getBlock());
                         touchX = (int) event.getX();
                         touchY = (int) event.getY();
@@ -169,21 +177,44 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
                 return true;
             }
             if (deltaX > 100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT))) {
-                engine.apply(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT));
+                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), RIGHT));
             } else if (deltaX < -100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT))) {
-                engine.apply(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT));
+                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), LEFT));
             } else if (deltaY > 100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN))) {
-                engine.apply(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN));
+                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), DOWN));
             } else if (deltaY < -100 && engine.isValid(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP))) {
-                engine.apply(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP));
+                animate(new Move(touchBlockCoords.getX(), touchBlockCoords.getY(), UP));
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-            touchBlockView = null;
             touchX = 0;
             touchY = 0;
         }
 
         return true;
+    }
+
+    private void animate(Move move) {
+        touchBlockCoords = null;
+        String propertyName = move.getDirection().isHorizontal() ? "translationX" : "translationY";
+        float moveMultiplier = move.getDirection() == LEFT || move.getDirection() == UP ? -1 : 1;
+
+        Map<Coordinate, Block> blocksThatWillMove = engine.getBlocksThatWillMove(move);
+        List<Animator> animators = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+
+            if (child instanceof BlockView && blocksThatWillMove.containsValue(((BlockView) child).getBlock())) {
+                animators.add(ObjectAnimator.ofFloat(child, propertyName, 0, moveMultiplier * blockSize));
+            }
+        }
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(70);
+        animatorSet.playTogether(animators);
+
+        AnimationListener.onAnimationEnd(animatorSet, () -> engine.apply(move));
+
+        animatorSet.start();
     }
 
     @Override
