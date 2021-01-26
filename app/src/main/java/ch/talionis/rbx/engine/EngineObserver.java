@@ -6,4 +6,8 @@ public interface EngineObserver {
     void onLevelLoaded();
 
     void onStateUpdated(State state);
+
+    void onLevelComplete();
+
+    void onLevelUnloaded();
 }

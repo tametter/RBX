@@ -80,7 +80,6 @@ public class BlockView extends FrameLayout implements ViewWithCoordinate {
                 break;
             }
             case NORMAL: {
-                //TODO: rotation
                 if (block.from().isOpposite(block.to())) {
                     // A line
                     PartView partView = new PartView(getContext(), null);
@@ -96,12 +95,12 @@ public class BlockView extends FrameLayout implements ViewWithCoordinate {
                     // A corner
                     PartView partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerLarge);
-                    partView.setRotation(getRotationForDirection(block.from().inverse()));
+                    partView.setRotation(getRotationForDirection(block.to().inverse()));
                     addView(partView);
 
                     partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerSmall);
-                    partView.setRotation(getRotationForDirection(block.from().inverse()));
+                    partView.setRotation(getRotationForDirection(block.to().inverse()));
                     addView(partView);
                 }
                 break;

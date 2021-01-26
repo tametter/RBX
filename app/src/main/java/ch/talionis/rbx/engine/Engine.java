@@ -29,6 +29,12 @@ public class Engine {
     private State state;
 
     public void load(Level level) {
+        if (state != null) {
+            for (EngineObserver engineObserver : engineObservers) {
+                engineObserver.onLevelUnloaded();
+            }
+        }
+
         state = new State(level);
         calculatePowered();
         for (EngineObserver engineObserver : engineObservers) {
@@ -198,6 +204,12 @@ public class Engine {
     private void notifyStateChanged() {
         for (EngineObserver observer : engineObservers) {
             observer.onStateUpdated(state);
+        }
+
+        if (isComplete()) {
+            for (EngineObserver observer : engineObservers) {
+                observer.onLevelComplete();
+            }
         }
     }
 }

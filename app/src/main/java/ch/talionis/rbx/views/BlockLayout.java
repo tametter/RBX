@@ -25,9 +25,10 @@ import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 import ch.talionis.rbx.functional.AnimationListener;
 
+import static ch.talionis.rbx.animation.FadeAnimations.fadeIn;
+import static ch.talionis.rbx.animation.FadeAnimations.fadeOut;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
-import static ch.talionis.rbx.engine.model.Coordinate.coordinate;
 import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
@@ -55,13 +56,6 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     }
 
     private void addViewsForState(State state) {
-        if (engine.isComplete()) {
-            animateOut();
-            return;
-        } else {
-//            this.setBackgroundColor(Color.TRANSPARENT);
-        }
-
         removeAllViews();
 
         // Add background views
@@ -221,68 +215,30 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         animatorSet.start();
     }
 
-    private void animateOut() {
-        logV(this, "Animating out");
-        int width = engine.getState().getLevel().getWidth();
-        int height = engine.getState().getLevel().getHeight();
-
-        List<Coordinate> coordinates = new ArrayList<>();
-        for (int x=0; x<width;x++) {
-            for (int y=0; y<height;y++) {
-                coordinates.add(coordinate(x, y));
-            }
-        }
-
-        Collections.shuffle(coordinates);
-
-        long delay = 0;
-        for (Coordinate coordinate : coordinates) {
-            List<View> viewsAtCoordinate = new ArrayList<>();
-            for (int i = 0; i < getChildCount(); i++) {
-                View child = getChildAt(i);
-
-                if (child instanceof ViewWithCoordinate) {
-                    ViewWithCoordinate viewWithCoordinate = (ViewWithCoordinate) child;
-                    if (viewWithCoordinate.getCoordinate().equals(coordinate)) {
-                        viewsAtCoordinate.add(child);
-                    }
-                }
-            }
-
-            if (viewsAtCoordinate.size() == 0) {
-                continue;
-            }
-
-            List<Animator> animators = new ArrayList<>();
-            for (View view : viewsAtCoordinate) {
-                animators.add(ObjectAnimator.ofFloat(view, "elevation", view.getElevation(), 20));
-                animators.add(ObjectAnimator.ofFloat(view, "alpha", 1, 0));
-                animators.add(ObjectAnimator.ofFloat(view, "scaleX", 1, 1.8f));
-                animators.add(ObjectAnimator.ofFloat(view, "scaleY", 1, 1.8f));
-            }
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.setDuration(400);
-            animatorSet.setStartDelay(delay);
-            delay = delay + 100;
-            animatorSet.playTogether(animators);
-
-            animatorSet.start();
-        }
-    }
-
     @Override
     public void onLevelLoaded() {
         State state = engine.getState();
-
         numberOfVerticalBlocks = state.getLevel().getHeight();
         numberOfHorizontalBlocks = state.getLevel().getWidth();
-
         addViewsForState(state);
+
+        if (getAlpha() == 0) {
+            fadeIn(this);
+        }
     }
 
     @Override
     public void onStateUpdated(State state) {
         addViewsForState(state);
+    }
+
+    @Override
+    public void onLevelComplete() {
+        fadeOut(this);
+    }
+
+    @Override
+    public void onLevelUnloaded() {
+
     }
 }

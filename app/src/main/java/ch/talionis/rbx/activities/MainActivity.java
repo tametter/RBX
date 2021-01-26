@@ -1,13 +1,17 @@
 package ch.talionis.rbx.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.Engine;
+import ch.talionis.rbx.engine.EngineObserver;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Level;
+import ch.talionis.rbx.engine.model.State;
 import ch.talionis.rbx.views.BlockLayout;
 
 import static ch.talionis.rbx.engine.model.Block.absentBlock;
@@ -16,8 +20,10 @@ import static ch.talionis.rbx.engine.model.Block.endBlock;
 import static ch.talionis.rbx.engine.model.Block.normalConnector;
 import static ch.talionis.rbx.engine.model.Block.solidBlock;
 import static ch.talionis.rbx.engine.model.Block.startBlock;
+import static ch.talionis.rbx.engine.model.Direction.DOWN;
 import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
+import static ch.talionis.rbx.engine.model.Direction.UP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,16 +47,46 @@ public class MainActivity extends AppCompatActivity {
 //                {absentBlock(), emptyBlock(), absentBlock(), absentBlock()},
 //        });
 
-        Level sampleLevel = new Level(new Block[][]{
+        Level level1 = new Level(new Block[][]{
                 {absentBlock(), startBlock(RIGHT)},
                 {endBlock(LEFT), normalConnector(LEFT, RIGHT)},
                 {emptyBlock(), emptyBlock()},
         });
 
+        Level level2= new Level(new Block[][]{
+                {absentBlock(), startBlock(RIGHT)},
+                {normalConnector(LEFT, UP), emptyBlock()},
+                {emptyBlock(), endBlock(DOWN)},
+        });
+
         BlockLayout blockLayout = findViewById(R.id.block_layout);
         blockLayout.setEngine(engine);
 
-        engine.load(sampleLevel);
+        engine.load(level1);
+
+        engine.addObserver(new EngineObserver() {
+            @Override
+            public void onLevelLoaded() {
+
+            }
+
+            @Override
+            public void onStateUpdated(State state) {
+
+            }
+
+            @Override
+            public void onLevelComplete() {
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        engine.load(level2);
+                }, 1000);
+            }
+
+            @Override
+            public void onLevelUnloaded() {
+
+            }
+        });
 
 //        BlockView blockView = findViewById(R.id.block_view);
 //        blockView.setBlock(Block.endBlock(RIGHT));
