@@ -9,6 +9,9 @@ import ch.talionis.rbx.router.Router;
 import ch.talionis.rbx.screen.MainScreen;
 import ch.talionis.rbx.screen.PlayScreen;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 import static ch.talionis.rbx.activities.ApplicationUtils.getRouter;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        findViewById(R.id.main_container).setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | SYSTEM_UI_FLAG_LAYOUT_STABLE | SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
         getRouter(this).setContainer(findViewById(R.id.main_container));
         getRouter(this).push(new MainScreen());
