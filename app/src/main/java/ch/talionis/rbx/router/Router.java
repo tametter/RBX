@@ -23,6 +23,10 @@ public class Router {
         setView(screen);
     }
 
+    public boolean isEmpty() {
+        return screenStack.isEmpty();
+    }
+
     public Screen peek() {
         return screenStack.peek();
     }

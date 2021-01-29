@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.functional.Scope;
 
-public class TestScreen extends Screen {
+public class ExhibitionScreen extends Screen {
 
     @Override
     public View createView(LayoutInflater layoutInflater, ViewGroup container) {
-        View testView = new View(container.getContext());
-        testView.setBackgroundResource(R.color.colorAccent);
-        testView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        return testView;
+        return layoutInflater.inflate(R.layout.screen_exhibition, container, false);
     }
 
     @Override
