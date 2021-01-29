@@ -8,6 +8,8 @@
     <color name="bg_gradient_center">#61391E94</color>
     <color name="bg_gradient_top">#6A0037A5</color>
 
+    <color name="triangle_base_color">#F7DFFF</color>
+
     <color name="block_solid">#555555</color>
     <color name="block_empty">#f4f4f2</color>
     <color name="block_movable">#E1B894</color>
