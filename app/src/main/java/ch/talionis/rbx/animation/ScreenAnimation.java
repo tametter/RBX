@@ -2,8 +2,10 @@ package ch.talionis.rbx.animation;
 
 import android.view.View;
 
-public interface ScreenAnimation {
-    void animatePush(View container, View oldView, View newView, Runnable andThen);
+import ch.talionis.rbx.functional.QuadConsumer;
 
-    void animatePop(View container, View oldView, View newView, Runnable andThen);
+public interface ScreenAnimation {
+    QuadConsumer<View, View, View, Runnable> pushAnimation();
+
+    QuadConsumer<View, View, View, Runnable> popAnimation();
 }
