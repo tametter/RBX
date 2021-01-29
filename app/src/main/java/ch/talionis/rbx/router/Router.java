@@ -1,9 +1,12 @@
 package ch.talionis.rbx.router;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Stack;
 
+import ch.talionis.rbx.animation.ScreenAnimation;
+import ch.talionis.rbx.animation.SlideAnimation;
 import ch.talionis.rbx.screen.Screen;
 
 public class Router {
@@ -20,7 +23,11 @@ public class Router {
 
     public void push(Screen screen) {
         screenStack.push(screen);
-        setView(screen);
+        if (container.getChildCount() == 0) {
+            container.addView(screen.getOrCreateView(container));
+            return;
+        }
+        animatePush(screen);
     }
 
     public boolean isEmpty() {
@@ -33,11 +40,26 @@ public class Router {
 
     public void pop() {
         screenStack.pop();
-        setView(screenStack.peek());
+        animatePop(screenStack.peek());
     }
 
-    private void setView(Screen screen) {
-        container.removeAllViews();
-        container.addView(screen.getOrCreateView(container));
+    private void animatePush(Screen screen) {
+        View currentView = container.getChildAt(0);
+        View newView = screen.getOrCreateView(container);
+
+        container.addView(newView);
+
+        ScreenAnimation screenAnimation = new SlideAnimation();
+        screenAnimation.animatePush(container, currentView, newView, () -> container.removeView(currentView));
+    }
+
+    private void animatePop(Screen screen) {
+        View currentView = container.getChildAt(0);
+        View newView = screen.getOrCreateView(container);
+
+        container.addView(newView);
+
+        ScreenAnimation screenAnimation = new SlideAnimation();
+        screenAnimation.animatePop(container, currentView, newView, () -> container.removeView(currentView));
     }
 }
