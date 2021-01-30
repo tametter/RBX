@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements RouterObservable 
 
         Router router = getRouter(this);
         router.setContainer(findViewById(R.id.main_container));
+        router.setParallaxBackground(findViewById(R.id.triangle_background));
         router.push(new MainScreen());
         router.addObserver(this);
     }

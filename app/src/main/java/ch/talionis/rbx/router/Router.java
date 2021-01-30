@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Stack;
 
 import ch.talionis.rbx.animation.ScreenAnimation;
+import ch.talionis.rbx.animation.ScreenAnimation.AnimationCallable;
 import ch.talionis.rbx.animation.SlideAnimation;
-import ch.talionis.rbx.functional.QuadConsumer;
 import ch.talionis.rbx.screen.Screen;
 
 public class Router {
     private ViewGroup container;
+    private View parallaxBackground;
     private final Stack<Screen> screenStack;
     private final ScreenAnimation defaultAnimation;
     private final List<RouterObservable> routerObservables;
@@ -32,6 +33,10 @@ public class Router {
 
     public void setContainer(ViewGroup container) {
         this.container = container;
+    }
+
+    public void setParallaxBackground(View view) {
+        this.parallaxBackground = view;
     }
 
     public void push(Screen screen) {
@@ -55,7 +60,7 @@ public class Router {
         screenStack.pop();
 
         if (screenStack.isEmpty()) {
-            for(RouterObservable routerObservable : routerObservables) {
+            for (RouterObservable routerObservable : routerObservables) {
                 routerObservable.onLastScreenPopped();
             }
             return;
@@ -64,11 +69,11 @@ public class Router {
         setScreen(screenStack.peek(), defaultAnimation.popAnimation());
     }
 
-    private void setScreen(Screen screen, QuadConsumer<View, View, View, Runnable> transitionAnimation) {
+    private void setScreen(Screen screen, AnimationCallable<View, View, View, View, Runnable> transitionAnimation) {
         View oldView = container.getChildAt(0);
         View newView = screen.getOrCreateView(container);
 
         container.addView(newView);
-        transitionAnimation.accept(container, oldView, newView, () -> container.removeView(oldView));
+        transitionAnimation.apply(container, parallaxBackground, oldView, newView, () -> container.removeView(oldView));
     }
 }

@@ -5,6 +5,7 @@
     android:background="@drawable/gradient_bg">
 
     <ch.talionis.rbx.views.TriangleBackground
+        android:id="@+id/triangle_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
