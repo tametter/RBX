@@ -11,32 +11,63 @@
         android:layout_gravity="center">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/continue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CONTINUE"
-            android:textColor="@color/button_text"
-            android:textSize="22sp"
-            app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="8dp"
-            app:rippleColor="#33AAAAAA"
-            app:strokeColor="#FF0000"
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/button_text_size"
+            app:backgroundTint="@color/button_background_color"
+            app:cornerRadius="0dp"
+            app:rippleColor="@color/button_ripple_color"
+            app:strokeColor="@color/button_stroke_color"
             app:strokeWidth="2dp" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/levels_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEVELS"
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/button_text_size"
+            app:backgroundTint="@color/button_background_color"
+            app:cornerRadius="0dp"
+            app:rippleColor="@color/button_ripple_color"
+            app:strokeColor="@color/button_stroke_color"
+            app:strokeWidth="2dp"
+            android:layout_marginTop="16dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/exhibition_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EXHIBITION"
-            android:textColor="@color/button_text"
-            android:textSize="22sp"
-            app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="8dp"
-            app:rippleColor="#33AAAAAA"
-            app:strokeColor="#FF0000"
-            app:strokeWidth="2dp" />
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/button_text_size"
+            app:backgroundTint="@color/button_background_color"
+            app:cornerRadius="0dp"
+            app:rippleColor="@color/button_ripple_color"
+            app:strokeColor="@color/button_stroke_color"
+            app:strokeWidth="2dp"
+            android:layout_marginTop="16dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/quit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUIT"
+            android:textColor="@color/button_text_color"
+            android:textSize="@dimen/button_text_size"
+            app:backgroundTint="@color/button_background_color"
+            app:cornerRadius="0dp"
+            app:rippleColor="@color/button_ripple_color"
+            app:strokeColor="@color/button_stroke_color"
+            app:strokeWidth="2dp"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 

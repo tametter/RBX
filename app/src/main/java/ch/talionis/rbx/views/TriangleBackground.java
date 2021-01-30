@@ -63,13 +63,16 @@ public class TriangleBackground extends View {
 
         for (int x = 0; x < horizontalTriangleCount; x++) {
             for (int y = 0; y < verticalTriangleCount; y++) {
+                float horizontalPosition = x * triangleWidth + y%2 * 0.5f * triangleWidth;
+                float verticalPosition = -y * triangleHeight;
+
                 upperTrianglePath.reset();
-                upperTrianglePathSource.offset(x * triangleWidth + y%2 * 0.5f * triangleWidth, -y * triangleHeight, upperTrianglePath);
+                upperTrianglePathSource.offset(horizontalPosition, verticalPosition, upperTrianglePath);
                 paint.setAlpha(getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount));
                 canvas.drawPath(upperTrianglePath, paint);
 
                 lowerTrianglePath.reset();
-                lowerTrianglePathSource.offset(x * triangleWidth + y%2 * 0.5f * triangleWidth, -y * triangleHeight, lowerTrianglePath);
+                lowerTrianglePathSource.offset(horizontalPosition, verticalPosition, lowerTrianglePath);
                 paint.setAlpha(getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount));
                 canvas.drawPath(lowerTrianglePath, paint);
             }

@@ -10,10 +10,13 @@
 
     <color name="triangle_base_color">#F7DFFF</color>
 
+    <color name="button_text_color">#F7E8FB</color>
+    <color name="button_stroke_color">#F7EBFB</color>
+    <color name="button_ripple_color">#F7DFFF</color>
+    <color name="button_background_color">@android:color/transparent</color>
+
     <color name="block_solid">#555555</color>
     <color name="block_empty">#f4f4f2</color>
     <color name="block_movable">#E1B894</color>
-
-    <color name="button_text">#FFFFFF</color>
 
 </resources>

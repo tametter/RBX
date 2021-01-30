@@ -16,7 +16,9 @@ public class MainScreen extends Screen {
         View view = layoutInflater.inflate(R.layout.screen_main, container, false);
 
         view.findViewById(R.id.continue_button).setOnClickListener(unused -> getRouter(container.getContext()).push(new PlayScreen()));
+        view.findViewById(R.id.levels_button).setOnClickListener(unused -> getRouter(container.getContext()).push(new LevelsScreen()));
         view.findViewById(R.id.exhibition_button).setOnClickListener(unused -> getRouter(container.getContext()).push(new ExhibitionScreen()));
+        view.findViewById(R.id.quit_button).setOnClickListener(unused -> getRouter(container.getContext()).pop());
 
         return view;
     }
