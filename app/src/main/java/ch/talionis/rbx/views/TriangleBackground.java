@@ -2,7 +2,6 @@ package ch.talionis.rbx.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -21,6 +20,8 @@ public class TriangleBackground extends View {
     private final float triangleHeight = (float) Math.sqrt(Math.pow(triangleWidth, 2) - Math.pow(0.5f * triangleWidth, 2));
     private Paint paint;
     private Random random;
+    private int[][] upperTriangleAlphas;
+    private int[][] lowerTriangleAlphas;
     Path upperTrianglePathSource = new Path();
     Path lowerTrianglePathSource = new Path();
     Path upperTrianglePath = new Path();
@@ -59,21 +60,33 @@ public class TriangleBackground extends View {
         calculateLowerTrianglePathSource(canvas);
 
         int horizontalTriangleCount = (int) (canvas.getWidth() / triangleWidth) + 1;
-        int verticalTriangleCount = (int) (canvas.getHeight() / 2 / triangleHeight);
+        int verticalTriangleCount = (int) (canvas.getHeight() / triangleHeight / 2);
+
+        if (upperTriangleAlphas == null || lowerTriangleAlphas == null) {
+            upperTriangleAlphas = new int[horizontalTriangleCount][verticalTriangleCount];
+            lowerTriangleAlphas = new int[horizontalTriangleCount][verticalTriangleCount];
+
+            for (int x = 0; x < horizontalTriangleCount; x++) {
+                for (int y = 0; y < verticalTriangleCount; y++) {
+                    upperTriangleAlphas[x][y] = getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount);
+                    lowerTriangleAlphas[x][y] = getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount);
+                }
+            }
+        }
 
         for (int x = 0; x < horizontalTriangleCount; x++) {
             for (int y = 0; y < verticalTriangleCount; y++) {
-                float horizontalPosition = x * triangleWidth + y%2 * 0.5f * triangleWidth;
+                float horizontalPosition = x * triangleWidth + y % 2 * 0.5f * triangleWidth;
                 float verticalPosition = -y * triangleHeight;
 
                 upperTrianglePath.reset();
                 upperTrianglePathSource.offset(horizontalPosition, verticalPosition, upperTrianglePath);
-                paint.setAlpha(getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount));
+                paint.setAlpha(upperTriangleAlphas[x][y]);
                 canvas.drawPath(upperTrianglePath, paint);
 
                 lowerTrianglePath.reset();
                 lowerTrianglePathSource.offset(horizontalPosition, verticalPosition, lowerTrianglePath);
-                paint.setAlpha(getAlphaForIndex(x, y, horizontalTriangleCount, verticalTriangleCount));
+                paint.setAlpha(lowerTriangleAlphas[x][y]);
                 canvas.drawPath(lowerTrianglePath, paint);
             }
         }
