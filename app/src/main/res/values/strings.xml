@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">RBX</string>
+
+    <string name="screen_main_button_continue">CONTINUE</string>
+    <string name="screen_main_button_levels">@string/screen_levels_title</string>
+    <string name="screen_main_button_exhibition">@string/screen_exhibition_title</string>
+    <string name="screen_main_button_quit">QUIT</string>
+
+    <string name="screen_exhibition_title">EXHIBITION</string>
+    <string name="screen_levels_title">LEVELS</string>
+
 </resources>

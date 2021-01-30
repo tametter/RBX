@@ -48,10 +48,6 @@ public class Router {
         setScreen(screen, defaultAnimation.pushAnimation());
     }
 
-    public boolean isEmpty() {
-        return screenStack.isEmpty();
-    }
-
     public void pop() {
         if (screenStack.isEmpty()) {
             throw new IllegalStateException("Tried to pop empty screen stack.");

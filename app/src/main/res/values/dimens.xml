@@ -2,6 +2,8 @@
 <resources>
     <dimen name="background_elevation">4dp</dimen>
     <dimen name="part_elevation">4dp</dimen>
-    <dimen name="block_size">82dp</dimen>
+    <dimen name="block_size">64dp</dimen>
     <dimen name="button_text_size">22sp</dimen>
+    <dimen name="top_bar_text_size">22sp</dimen>
+
 </resources>
