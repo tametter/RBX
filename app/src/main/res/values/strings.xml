@@ -8,5 +8,6 @@
 
     <string name="screen_exhibition_title">EXHIBITION</string>
     <string name="screen_levels_title">LEVELS</string>
+    <string name="screen_settings_title">SETTINGS</string>
 
 </resources>

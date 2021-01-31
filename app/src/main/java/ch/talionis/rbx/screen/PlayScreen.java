@@ -15,6 +15,8 @@ import ch.talionis.rbx.engine.model.State;
 import ch.talionis.rbx.functional.Scope;
 import ch.talionis.rbx.views.BlockLayout;
 
+import static android.view.View.GONE;
+import static ch.talionis.rbx.activities.ApplicationUtils.getRouter;
 import static ch.talionis.rbx.engine.model.Block.absentBlock;
 import static ch.talionis.rbx.engine.model.Block.emptyBlock;
 import static ch.talionis.rbx.engine.model.Block.endBlock;
@@ -32,6 +34,10 @@ public class PlayScreen extends Screen {
     @Override
     public View createView(LayoutInflater layoutInflater, ViewGroup container) {
         View view = layoutInflater.inflate(R.layout.screen_play, container, false);
+
+        view.findViewById(R.id.top_bar_back_button).setOnClickListener(unused -> getRouter(container.getContext()).pop());
+        view.findViewById(R.id.top_bar_title).setVisibility(GONE);
+
         engine = new Engine();
         blockLayout = view.findViewById(R.id.block_layout);
         blockLayout.setEngine(engine);

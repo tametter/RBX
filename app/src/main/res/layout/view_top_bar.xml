@@ -9,6 +9,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:foregroundGravity="center"
+        android:layout_alignParentStart="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_arrow_back_24"/>
 
@@ -16,11 +17,22 @@
         android:id="@+id/top_bar_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:textSize="@dimen/top_bar_text_size"
         android:textColor="@color/button_text_color"
         android:gravity="center_vertical"
         android:text="TEST TITLE"
         android:layout_marginLeft="48dp"/>
+
+    <ImageButton
+        android:id="@+id/top_bar_settings_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:foregroundGravity="center"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_settings_24dp"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package ch.talionis.rbx.router;
 
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,7 +16,7 @@ import ch.talionis.rbx.screen.Screen;
 public class Router {
     private ViewGroup container;
     private View parallaxBackground;
-    private final Stack<Screen> screenStack;
+    private final Stack<Pair<Screen, ScreenAnimation>> screenStack;
     private final ScreenAnimation defaultAnimation;
     private final List<RouterObservable> routerObservables;
 
@@ -39,13 +40,17 @@ public class Router {
         this.parallaxBackground = view;
     }
 
-    public void push(Screen screen) {
-        screenStack.push(screen);
+    public void push(Screen screen, ScreenAnimation screenAnimation) {
+        screenStack.push(new Pair<>(screen, screenAnimation));
         if (container.getChildCount() == 0) {
             container.addView(screen.getOrCreateView(container));
             return;
         }
-        setScreen(screen, defaultAnimation.pushAnimation());
+        setScreen(screen, screenAnimation.pushAnimation());
+    }
+
+    public void push(Screen screen) {
+        push(screen, defaultAnimation);
     }
 
     public void pop() {
@@ -53,7 +58,7 @@ public class Router {
             throw new IllegalStateException("Tried to pop empty screen stack.");
         }
 
-        screenStack.pop();
+        Pair<Screen, ScreenAnimation> popped = screenStack.pop();
 
         if (screenStack.isEmpty()) {
             for (RouterObservable routerObservable : routerObservables) {
@@ -62,7 +67,8 @@ public class Router {
             return;
         }
 
-        setScreen(screenStack.peek(), defaultAnimation.popAnimation());
+        Pair<Screen, ScreenAnimation> screenAnimationPair = screenStack.peek();
+        setScreen(screenAnimationPair.first, popped.second.popAnimation());
     }
 
     private void setScreen(Screen screen, AnimationCallable<View, View, View, View, Runnable> transitionAnimation) {
