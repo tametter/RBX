@@ -17,6 +17,7 @@ public class SettingsScreen extends Screen {
         View view = layoutInflater.inflate(R.layout.screen_settings, container, false);
 
         view.findViewById(R.id.top_bar_back_button).setOnClickListener(unused -> getRouter(container.getContext()).pop());
+        view.findViewById(R.id.top_bar_back_button).setRotation(-90);
         ((TextView) view.findViewById(R.id.top_bar_title)).setText(R.string.screen_settings_title);
 
         return view;
