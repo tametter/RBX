@@ -1,4 +1,4 @@
-package ch.talionis.rbx.screen;
+package ch.talionis.rbx.screen.play;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +13,7 @@ import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Level;
 import ch.talionis.rbx.engine.model.State;
 import ch.talionis.rbx.functional.Scope;
+import ch.talionis.rbx.screen.Screen;
 import ch.talionis.rbx.views.BlockLayout;
 
 import static android.view.View.GONE;

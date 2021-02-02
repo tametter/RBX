@@ -1,4 +1,4 @@
-package ch.talionis.rbx.screen;
+package ch.talionis.rbx.screen.main;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.animation.VerticalSlideAnimation;
 import ch.talionis.rbx.functional.Scope;
+import ch.talionis.rbx.screen.play.PlayScreen;
+import ch.talionis.rbx.screen.Screen;
+import ch.talionis.rbx.screen.settings.SettingsScreen;
+import ch.talionis.rbx.screen.exhibition.ExhibitionScreen;
+import ch.talionis.rbx.screen.levels.LevelsScreen;
 
 import static android.view.View.GONE;
 import static ch.talionis.rbx.activities.ApplicationUtils.getRouter;

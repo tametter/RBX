@@ -9,8 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.router.Router;
 import ch.talionis.rbx.router.RouterObservable;
-import ch.talionis.rbx.screen.MainScreen;
-import ch.talionis.rbx.screen.PlayScreen;
+import ch.talionis.rbx.screen.main.MainScreen;
 
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;

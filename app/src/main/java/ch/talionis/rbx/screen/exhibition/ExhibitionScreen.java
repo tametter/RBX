@@ -1,4 +1,4 @@
-package ch.talionis.rbx.screen;
+package ch.talionis.rbx.screen.exhibition;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.functional.Scope;
+import ch.talionis.rbx.screen.Screen;
 
 import static ch.talionis.rbx.activities.ApplicationUtils.getRouter;
 
