@@ -2,7 +2,6 @@ package ch.talionis.rbx.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowInsets;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,19 +26,16 @@ public class MainActivity extends AppCompatActivity implements RouterObservable 
         mainContainer.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | SYSTEM_UI_FLAG_LAYOUT_STABLE | SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
-        mainContainer.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
-                view.setPadding(insets.getStableInsetLeft(), insets.getStableInsetTop(), insets.getStableInsetRight(), insets.getStableInsetBottom());
-                return insets;
-            }
-        });
-
         Router router = getRouter(this);
         router.setContainer(findViewById(R.id.main_container));
         router.setParallaxBackground(findViewById(R.id.triangle_background));
         router.push(new MainScreen());
         router.addObserver(this);
+
+        mainContainer.setOnApplyWindowInsetsListener((v, insets) -> {
+            router.setInsets(insets);
+            return insets;
+        });
     }
 
     @Override

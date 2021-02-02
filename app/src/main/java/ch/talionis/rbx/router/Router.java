@@ -3,6 +3,7 @@ package ch.talionis.rbx.router;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Router {
     private final Stack<Pair<Screen, ScreenAnimation>> screenStack;
     private final ScreenAnimation defaultAnimation;
     private final List<RouterObservable> routerObservables;
+    private WindowInsets insets;
 
     public Router() {
         screenStack = new Stack<>();
@@ -29,6 +31,14 @@ public class Router {
     public void addObserver(RouterObservable routerObservable) {
         if (!routerObservables.contains(routerObservable)) {
             routerObservables.add(routerObservable);
+        }
+    }
+
+    public void setInsets(WindowInsets insets) {
+        this.insets = insets;
+
+        if (!screenStack.isEmpty()) {
+            screenStack.peek().first.onInsets(insets);
         }
     }
 
@@ -46,6 +56,7 @@ public class Router {
             container.addView(screen.getOrCreateView(container));
             return;
         }
+
         setScreen(screen, screenAnimation.pushAnimation());
     }
 
@@ -74,6 +85,9 @@ public class Router {
     private void setScreen(Screen screen, AnimationCallable<View, View, View, View, Runnable> transitionAnimation) {
         View oldView = container.getChildAt(0);
         View newView = screen.getOrCreateView(container);
+        if (!screenStack.isEmpty() && insets != null) {
+            screen.onInsets(insets);
+        }
 
         container.addView(newView);
         transitionAnimation.apply(container, parallaxBackground, oldView, newView, () -> container.removeView(oldView));
