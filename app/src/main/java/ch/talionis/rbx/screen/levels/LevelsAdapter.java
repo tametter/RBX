@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ch.talionis.rbx.R;
+import ch.talionis.rbx.views.PentagonNumberView;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.LevelsViewHolder> {
     private final LayoutInflater layoutInflater;
@@ -25,7 +26,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.LevelsView
 
     @Override
     public void onBindViewHolder(@NonNull LevelsViewHolder holder, int position) {
-
+        holder.setPentagonNumber(position + 1);
     }
 
     @Override
@@ -33,9 +34,16 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.LevelsView
         return 20;
     }
 
-    public static class LevelsViewHolder extends RecyclerView.ViewHolder {
-        public LevelsViewHolder(@NonNull View itemView) {
+    static class LevelsViewHolder extends RecyclerView.ViewHolder {
+        private PentagonNumberView pentagonNumberView;
+
+        LevelsViewHolder(@NonNull View itemView) {
             super(itemView);
+            pentagonNumberView = itemView.findViewById(R.id.pentagon_number_view);
+        }
+
+        public void setPentagonNumber(int number) {
+            pentagonNumberView.setText(number + "");
         }
     }
 }
