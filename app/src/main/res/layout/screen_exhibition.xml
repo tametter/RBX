@@ -6,5 +6,31 @@
 
     <include layout="@layout/view_top_bar" />
 
+    <ScrollView
+        android:id="@+id/exhibition_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ch.talionis.rbx.views.PentagonNumberView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginBottom="24dp"/>
+
+            <ch.talionis.rbx.views.StarView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginBottom="24dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
