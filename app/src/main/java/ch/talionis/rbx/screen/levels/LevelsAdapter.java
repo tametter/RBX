@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.levels.LevelGroup;
 import ch.talionis.rbx.levels.LevelManager;
-import ch.talionis.rbx.views.PentagonView;
+import ch.talionis.rbx.views.CircleAnimalView;
 
 import static ch.talionis.rbx.activities.ApplicationUtils.getLevelManager;
 
@@ -42,17 +41,15 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.LevelsView
     }
 
     static class LevelsViewHolder extends RecyclerView.ViewHolder {
-        private PentagonView pentagonView;
-        private ImageView animalView;
+        private CircleAnimalView circleImageView;
 
         LevelsViewHolder(@NonNull View itemView) {
             super(itemView);
-            pentagonView = itemView.findViewById(R.id.pentagon_number_view);
-            animalView = itemView.findViewById(R.id.animal_view);
+            circleImageView = itemView.findViewById(R.id.pentagon_number_view);
         }
 
         public void setLevelGroup(LevelGroup levelGroup) {
-            animalView.setImageResource(levelGroup.getGroupIconRes());
+            circleImageView.setImageResId(levelGroup.getGroupIconRes());
         }
     }
 }

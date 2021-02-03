@@ -6,11 +6,13 @@ import android.graphics.LinearGradient;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PointF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
@@ -19,17 +21,24 @@ import ch.talionis.rbx.R;
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.Paint.Style.FILL;
 import static android.graphics.Paint.Style.STROKE;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
-public class PentagonView extends View {
+public class CircleAnimalView extends FrameLayout {
+    private ImageView imageView;
     private Paint pentagonBackgroundPaint;
     private Paint pentagonStrokePaint;
     private Path path;
     private Paint pentagonShaderPaint;
 
-    public PentagonView(Context context, @Nullable AttributeSet attrs) {
+    public CircleAnimalView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setWillNotDraw(false);
+
+        imageView = new ImageView(this.getContext());
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setAlpha(0.6f);
+        addView(imageView);
+
         init();
     }
 
@@ -55,7 +64,11 @@ public class PentagonView extends View {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+        int width = right - left;
+        int height = bottom - top;
+        int padding = Math.min(width / 4, height / 4);
+        imageView.layout(padding, padding, width - padding, height - padding);
+
         init();
     }
 
@@ -65,63 +78,32 @@ public class PentagonView extends View {
         setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-
-                outline.setConvexPath(calculatePentagonPath(w, h));
+                outline.setConvexPath(calculatePath(w, h));
             }
         });
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        path = calculatePentagonPath(getWidth(), getHeight());
+        path = calculatePath(getWidth(), getHeight());
         canvas.drawPath(path, pentagonBackgroundPaint);
         canvas.drawPath(path, pentagonShaderPaint);
         canvas.drawPath(path, pentagonStrokePaint);
+
+        super.onDraw(canvas);
     }
 
-    private Path calculatePentagonPath(int width, int height) {
-        int corners = 5;
-        double startAngle = -Math.PI / 2;
+    private Path calculatePath(int width, int height) {
         int midX = width / 2;
         int midY = height / 2;
 
         float radius = Math.min(midX, midY) - pentagonStrokePaint.getStrokeWidth();
-
-        double anglePerCorner = Math.PI * 2 / corners;
-
-        PointF[] controlPoints = new PointF[corners];
-
-        for (int i = 0; i < corners; i++) {
-            double angle = (startAngle + i * anglePerCorner);
-            controlPoints[i] = new PointF(
-                    (float) (midX + cos(angle) * radius),
-                    (float) (midY + sin(angle) * radius)
-            );
-        }
-
-        float roundingFactor = 0.2f;
-
-        for (int i = 0; i < corners; i++) {
-            PointF lastControlPoint = i == 0 ? controlPoints[controlPoints.length - 1] : controlPoints[i - 1];
-            PointF controlPoint = controlPoints[i];
-            PointF nextControlPoint = i == controlPoints.length - 1 ? controlPoints[0] : controlPoints[i + 1];
-
-            float frontX = controlPoint.x + (lastControlPoint.x - controlPoint.x) * roundingFactor;
-            float frontY = controlPoint.y + (lastControlPoint.y - controlPoint.y) * roundingFactor;
-
-            float backX = controlPoint.x + (nextControlPoint.x - controlPoint.x) * roundingFactor;
-            float backY = controlPoint.y + (nextControlPoint.y - controlPoint.y) * roundingFactor;
-
-            if (i == 0) {
-                path.moveTo(frontX, frontY);
-            } else {
-                path.lineTo(frontX, frontY);
-            }
-
-            path.quadTo(controlPoint.x, controlPoint.y, backX, backY);
-        }
-
-        path.close();
+        path.reset();
+        path.addCircle(midX, midY, radius, Path.Direction.CW);
         return path;
+    }
+
+    public void setImageResId(int imageResid) {
+        imageView.setImageResource(imageResid);
     }
 }
