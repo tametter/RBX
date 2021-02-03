@@ -20,11 +20,21 @@
 
     </LinearLayout>
 
-    <ch.talionis.rbx.views.PentagonNumberView
+    <ch.talionis.rbx.views.PentagonView
         android:id="@+id/pentagon_number_view"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_centerHorizontal="true"
         android:elevation="4dp" />
+
+    <ImageView
+        android:id="@+id/animal_view"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        android:padding="22dp"
+        android:alpha="0.6"
+        android:elevation="4dp"/>
 
 </RelativeLayout>

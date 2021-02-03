@@ -19,7 +19,7 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <ch.talionis.rbx.views.PentagonNumberView
+            <ch.talionis.rbx.views.PentagonView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:layout_marginBottom="24dp"/>

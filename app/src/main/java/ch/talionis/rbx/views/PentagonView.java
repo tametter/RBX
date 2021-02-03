@@ -22,15 +22,13 @@ import static android.graphics.Paint.Style.STROKE;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class PentagonNumberView extends View {
+public class PentagonView extends View {
     private Paint pentagonBackgroundPaint;
     private Paint pentagonStrokePaint;
-    private Paint textPaint;
     private Path path;
-    private String text;
     private Paint pentagonShaderPaint;
 
-    public PentagonNumberView(Context context, @Nullable AttributeSet attrs) {
+    public PentagonView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -51,13 +49,6 @@ public class PentagonNumberView extends View {
         pentagonStrokePaint.setColor(getResources().getColor(R.color.view_levels_card_background));
         pentagonStrokePaint.setStyle(STROKE);
         pentagonStrokePaint.setStrokeWidth(getResources().getDimension(R.dimen.view_pentagon_stroke_width));
-
-
-        textPaint = new Paint();
-        textPaint.setFlags(ANTI_ALIAS_FLAG);
-        textPaint.setStrokeWidth(getResources().getDimension(R.dimen.view_pentagon_stroke_width));
-        textPaint.setColor(getResources().getColor(R.color.view_levels_card_background));
-        textPaint.setStyle(FILL);
 
         path = new Path();
     }
@@ -86,12 +77,6 @@ public class PentagonNumberView extends View {
         canvas.drawPath(path, pentagonBackgroundPaint);
         canvas.drawPath(path, pentagonShaderPaint);
         canvas.drawPath(path, pentagonStrokePaint);
-
-        if (text != null) {
-            textPaint.setTextSize(getHeight() / 2);
-            textPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText(text, getWidth() / 2, (int) ((getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
-        }
     }
 
     private Path calculatePentagonPath(int width, int height) {
@@ -106,7 +91,7 @@ public class PentagonNumberView extends View {
 
         PointF[] controlPoints = new PointF[corners];
 
-        for (int i=0; i<corners; i++) {
+        for (int i = 0; i < corners; i++) {
             double angle = (startAngle + i * anglePerCorner);
             controlPoints[i] = new PointF(
                     (float) (midX + cos(angle) * radius),
@@ -116,10 +101,10 @@ public class PentagonNumberView extends View {
 
         float roundingFactor = 0.2f;
 
-        for (int i=0; i<corners; i++) {
-            PointF lastControlPoint = i == 0 ? controlPoints[controlPoints.length - 1] : controlPoints[i-1];
+        for (int i = 0; i < corners; i++) {
+            PointF lastControlPoint = i == 0 ? controlPoints[controlPoints.length - 1] : controlPoints[i - 1];
             PointF controlPoint = controlPoints[i];
-            PointF nextControlPoint = i == controlPoints.length - 1 ? controlPoints[0] : controlPoints[i+1];
+            PointF nextControlPoint = i == controlPoints.length - 1 ? controlPoints[0] : controlPoints[i + 1];
 
             float frontX = controlPoint.x + (lastControlPoint.x - controlPoint.x) * roundingFactor;
             float frontY = controlPoint.y + (lastControlPoint.y - controlPoint.y) * roundingFactor;
@@ -138,10 +123,5 @@ public class PentagonNumberView extends View {
 
         path.close();
         return path;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-        invalidate();
     }
 }
