@@ -26,6 +26,8 @@
     <color name="view_star_unselected_stroke">#878787</color>
     <color name="view_star_unselected_fill">#DCDCDC</color>
 
+    <color name="view_level_stroke">#FF0000</color>
+
     <color name="white">#C5C5C5</color>
 
 
