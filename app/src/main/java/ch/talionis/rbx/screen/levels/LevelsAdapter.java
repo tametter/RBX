@@ -12,6 +12,7 @@ import ch.talionis.rbx.R;
 import ch.talionis.rbx.levels.LevelGroup;
 import ch.talionis.rbx.levels.LevelManager;
 import ch.talionis.rbx.views.CircleAnimalView;
+import ch.talionis.rbx.views.StarRow;
 
 import static ch.talionis.rbx.activities.ApplicationUtils.getLevelManager;
 
@@ -42,14 +43,17 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.LevelsView
 
     static class LevelsViewHolder extends RecyclerView.ViewHolder {
         private CircleAnimalView circleImageView;
+        private StarRow starRow;
 
         LevelsViewHolder(@NonNull View itemView) {
             super(itemView);
             circleImageView = itemView.findViewById(R.id.pentagon_number_view);
+            starRow = itemView.findViewById(R.id.star_row);
         }
 
         public void setLevelGroup(LevelGroup levelGroup) {
             circleImageView.setImageResId(levelGroup.getGroupIconRes());
+            starRow.setSelected(levelGroup.getStars());
         }
     }
 }

@@ -11,12 +11,12 @@ public class LevelManager {
     public LevelManager() {
         groups = new ArrayList<>();
 
-        groups.add(new LevelGroup(R.drawable.ic_rat_looking_right));
-        groups.add(new LevelGroup(R.drawable.ic_rabbit_facing_right));
-        groups.add(new LevelGroup(R.drawable.ic_turtle_facing_right));
-        groups.add(new LevelGroup(R.drawable.ic_cat_facing_right));
-        groups.add(new LevelGroup(R.drawable.ic_big_toucan));
-        groups.add(new LevelGroup(R.drawable.ic_big_owl));
+        groups.add(new LevelGroup(R.drawable.ic_rat_looking_right, 0));
+        groups.add(new LevelGroup(R.drawable.ic_rabbit_facing_right, 3));
+        groups.add(new LevelGroup(R.drawable.ic_turtle_facing_right, 2));
+        groups.add(new LevelGroup(R.drawable.ic_cat_facing_right, 3));
+        groups.add(new LevelGroup(R.drawable.ic_big_toucan, 0));
+        groups.add(new LevelGroup(R.drawable.ic_big_owl, 2));
 
     }
 

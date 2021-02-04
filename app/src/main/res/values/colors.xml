@@ -19,7 +19,12 @@
     <color name="block_empty">#f4f4f2</color>
     <color name="block_movable">#E1B894</color>
 
-    <color name="view_levels_card_background">#CBCBCB</color>
+    <color name="view_levels_card_background">#ECEBEB</color>
+
+    <color name="view_star_selected_stroke">@color/bg_gradient_bottom</color>
+    <color name="view_star_selected_fill">@color/bg_gradient_bottom</color>
+    <color name="view_star_unselected_stroke">#878787</color>
+    <color name="view_star_unselected_fill">#DCDCDC</color>
 
     <color name="white">#C5C5C5</color>
 

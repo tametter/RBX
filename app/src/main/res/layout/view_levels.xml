@@ -10,7 +10,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="16dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="196dp"
         android:layout_marginTop="36dp"
@@ -18,7 +18,16 @@
         android:elevation="4dp"
         android:orientation="vertical">
 
-    </LinearLayout>
+        <ch.talionis.rbx.views.StarRow
+            android:id="@+id/star_row"
+            android:layout_width="76dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"/>
+
+    </RelativeLayout>
 
     <ch.talionis.rbx.views.CircleAnimalView
         android:id="@+id/pentagon_number_view"

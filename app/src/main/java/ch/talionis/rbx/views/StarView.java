@@ -21,12 +21,13 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class StarView extends View {
-    private Paint pentagonBackgroundPaint;
-    private Paint pentagonStrokePaint;
-    private Paint textPaint;
+    private Paint starPaint;
     private Path path;
-    private String text;
-    private Paint pentagonShaderPaint;
+    private boolean isSelected;
+    private int strokeColorSelected;
+    private int fillColorSelected;
+    private int strokeColorUnselected;
+    private int fillColorUnselected;
 
     public StarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -34,30 +35,16 @@ public class StarView extends View {
     }
 
     private void init() {
-//        pentagonBackgroundPaint = new Paint();
-//        pentagonBackgroundPaint.setFlags(ANTI_ALIAS_FLAG);
-//        pentagonBackgroundPaint.setStyle(FILL);
-//        pentagonBackgroundPaint.setColor(getResources().getColor(R.color.white));
-//
-//        pentagonShaderPaint = new Paint();
-//        pentagonShaderPaint.setFlags(ANTI_ALIAS_FLAG);
-//        pentagonShaderPaint.setStyle(FILL);
-//        pentagonShaderPaint.setShader(new LinearGradient(getWidth() / 2, 0, getWidth() / 2, getHeight(), getResources().getColor(R.color.bg_gradient_top), getResources().getColor(R.color.bg_gradient_bottom), Shader.TileMode.MIRROR));
-
-        pentagonStrokePaint = new Paint();
-        pentagonStrokePaint.setFlags(ANTI_ALIAS_FLAG);
-        pentagonStrokePaint.setColor(getResources().getColor(R.color.view_levels_card_background));
-        pentagonStrokePaint.setStyle(STROKE);
-        pentagonStrokePaint.setStrokeWidth(getResources().getDimension(R.dimen.view_pentagon_stroke_width));
-
-
-        textPaint = new Paint();
-        textPaint.setFlags(ANTI_ALIAS_FLAG);
-        textPaint.setStrokeWidth(getResources().getDimension(R.dimen.view_pentagon_stroke_width));
-        textPaint.setColor(getResources().getColor(R.color.view_levels_card_background));
-        textPaint.setStyle(FILL);
+        starPaint = new Paint();
+        starPaint.setFlags(ANTI_ALIAS_FLAG);
+        starPaint.setStrokeWidth(getResources().getDimension(R.dimen.view_star_stroke_width));
 
         path = new Path();
+
+        strokeColorSelected = getResources().getColor(R.color.view_star_selected_stroke);
+        fillColorSelected = getResources().getColor(R.color.view_star_selected_fill);
+        strokeColorUnselected = getResources().getColor(R.color.view_star_unselected_stroke);
+        fillColorUnselected = getResources().getColor(R.color.view_star_unselected_fill);
     }
 
     @Override
@@ -72,7 +59,6 @@ public class StarView extends View {
         setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-
                 outline.setConvexPath(calculateStarPath(w, h));
             }
         });
@@ -81,15 +67,14 @@ public class StarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         path = calculateStarPath(getWidth(), getHeight());
-//        canvas.drawPath(path, pentagonBackgroundPaint);
-//        canvas.drawPath(path, pentagonShaderPaint);
-        canvas.drawPath(path, pentagonStrokePaint);
 
-        if (text != null) {
-            textPaint.setTextSize(getHeight() / 2);
-            textPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText(text, getWidth() / 2, (int) ((getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
-        }
+        starPaint.setStyle(FILL);
+        starPaint.setColor(isSelected ? fillColorSelected : fillColorUnselected);
+        canvas.drawPath(path, starPaint);
+
+        starPaint.setStyle(STROKE);
+        starPaint.setColor(isSelected ? strokeColorSelected : strokeColorUnselected);
+        canvas.drawPath(path, starPaint);
     }
 
     private Path calculateStarPath(int width, int height) {
@@ -97,7 +82,7 @@ public class StarView extends View {
         int midX = width / 2;
         int midY = height / 2;
 
-        float radius = Math.min(midX, midY) - pentagonStrokePaint.getStrokeWidth();
+        float radius = Math.min(midX, midY) - starPaint.getStrokeWidth();
         float innerRadius = radius * 0.4f;
 
         double anglePerCorner = Math.PI * 2 / 5;
@@ -105,7 +90,7 @@ public class StarView extends View {
         PointF[] outerControlPoints = new PointF[5];
         PointF[] innerControlPoints = new PointF[5];
 
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             double outerAngle = (startAngle + i * anglePerCorner);
             outerControlPoints[i] = new PointF(
                     (float) (midX + cos(outerAngle) * radius),
@@ -119,7 +104,7 @@ public class StarView extends View {
             );
         }
 
-        for (int i=0; i<outerControlPoints.length; i++) {
+        for (int i = 0; i < outerControlPoints.length; i++) {
             PointF outerControlPoint = outerControlPoints[i];
             PointF innerControlPoint = innerControlPoints[i];
             if (i == 0) {
@@ -134,8 +119,8 @@ public class StarView extends View {
         return path;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
         invalidate();
     }
 }
