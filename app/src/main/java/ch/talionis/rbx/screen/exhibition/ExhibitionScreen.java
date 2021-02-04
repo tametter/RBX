@@ -10,6 +10,7 @@ import android.widget.TextView;
 import ch.talionis.rbx.R;
 import ch.talionis.rbx.functional.Scope;
 import ch.talionis.rbx.screen.Screen;
+import ch.talionis.rbx.views.StarRow;
 
 import static ch.talionis.rbx.activities.ApplicationUtils.getRouter;
 
@@ -25,6 +26,11 @@ public class ExhibitionScreen extends Screen {
         ((TextView) mainView.findViewById(R.id.top_bar_title)).setText(R.string.screen_exhibition_title);
 
         scrollView = mainView.findViewById(R.id.exhibition_scrollview);
+
+        ((StarRow)mainView.findViewById(R.id.star_row_one)).setSelected(0);
+        ((StarRow)mainView.findViewById(R.id.star_row_two)).setSelected(1);
+        ((StarRow)mainView.findViewById(R.id.star_row_three)).setSelected(2);
+        ((StarRow)mainView.findViewById(R.id.star_row_four)).setSelected(3);
 
         return mainView;
     }
