@@ -69,6 +69,8 @@ public class LevelView extends FrameLayout {
         starRowHorizontalPadding = (int) dpToPx(getContext(), 4);
         starRowView = new StarRow(getContext(), null);
         addView(starRowView);
+
+        //setElevation(dpToPx(getContext(), 4));
     }
 
     @Override

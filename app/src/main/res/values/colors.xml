@@ -23,7 +23,7 @@
 
     <color name="view_star_selected_stroke">@color/bg_gradient_bottom</color>
     <color name="view_star_selected_fill">@color/bg_gradient_bottom</color>
-    <color name="view_star_unselected_stroke">#878787</color>
+    <color name="view_star_unselected_stroke">#BABABA</color>
     <color name="view_star_unselected_fill">#DCDCDC</color>
 
     <color name="view_level_stroke">@color/bg_gradient_bottom</color>
