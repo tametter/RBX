@@ -36,7 +36,7 @@ public class CircleAnimalView extends FrameLayout {
         imageView = new ImageView(this.getContext());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imageView.setAlpha(0.6f);
+        imageView.setAlpha(0.7f);
         addView(imageView);
 
         init();
