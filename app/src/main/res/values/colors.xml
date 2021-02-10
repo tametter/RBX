@@ -29,7 +29,7 @@
     <color name="view_level_stroke">@color/bg_gradient_bottom</color>
     <color name="view_level_gradient_top">@color/bg_gradient_top</color>
     <color name="view_level_gradient_bottom">@color/bg_gradient_bottom</color>
-    <color name="view_level_text_paint">#ECEBEB</color>
+    <color name="view_level_text_paint">@color/white</color>
 
     <color name="white">#FFFFFF</color>
 

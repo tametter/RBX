@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,14 +27,15 @@ import static ch.talionis.rbx.android.AndroidUtils.dpToPx;
 
 public class LevelView extends FrameLayout {
     private Path path;
-    private Paint strokePaint;
     private float roundRectRadius;
     private int strokeWidth;
-    private int starRowHorizontalPadding;
-    private StarRow starRowView;
     private Paint shaderPaint;
     private Paint textPaint;
-    private String text = "1";
+    private int levelNumber;
+    private ImageView firstStar;
+    private ImageView secondStar;
+    private ImageView thirdStar;
+    private LinearGradient shaderGradient;
 
     public LevelView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -42,16 +44,6 @@ public class LevelView extends FrameLayout {
 
     private void init() {
         setWillNotDraw(false);
-
-        strokeWidth = (int) getResources().getDimension(R.dimen.view_level_stroke_width);
-
-        strokePaint = new Paint();
-        strokePaint.setFlags(ANTI_ALIAS_FLAG);
-        strokePaint.setStrokeCap(ROUND);
-        strokePaint.setStyle(STROKE);
-        strokePaint.setStrokeWidth(strokeWidth);
-        strokePaint.setColor(getResources().getColor(R.color.view_level_stroke));
-
         shaderPaint = new Paint();
         shaderPaint.setFlags(ANTI_ALIAS_FLAG);
         shaderPaint.setStyle(FILL);
@@ -64,20 +56,26 @@ public class LevelView extends FrameLayout {
 
         path = new Path();
 
-        roundRectRadius = dpToPx(getContext(), 8);
-
-        starRowHorizontalPadding = (int) dpToPx(getContext(), 4);
-        starRowView = new StarRow(getContext(), null);
-        addView(starRowView);
-
+        roundRectRadius = dpToPx(getContext(), 0);
         //setElevation(dpToPx(getContext(), 4));
+
+        firstStar = new ImageView(getContext(), null);
+        firstStar.setImageResource(R.drawable.ic_star_24);
+        addView(firstStar);
+        secondStar = new ImageView(getContext(), null);
+        secondStar.setImageResource(R.drawable.ic_star_24);
+        addView(secondStar);
+        thirdStar = new ImageView(getContext(), null);
+        thirdStar.setImageResource(R.drawable.ic_star_24);
+        addView(thirdStar);
+
+        setElevation(dpToPx(getContext(), 2));
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         path = calculatePath(w, h);
-        shaderPaint.setShader(new LinearGradient(getWidth() / 2, 0, getWidth() / 2, getHeight(), getResources().getColor(R.color.view_level_gradient_top), getResources().getColor(R.color.view_level_gradient_bottom), Shader.TileMode.MIRROR));
         setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
@@ -90,26 +88,29 @@ public class LevelView extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = right - left;
         int height = bottom - top;
+        int starSize = (int) (0.3 * width);
+        int inset = (int) (0.5f * (width - 3 * starSize));
 
-        int starRowHeight = height / 3;
+        if (shaderGradient == null || changed) {
+            View parent = (View) getParent();
+            shaderGradient = new LinearGradient(-getLeft(), -getTop(), parent.getRight(),parent.getBottom(), getResources().getColor(R.color.view_level_gradient_top), getResources().getColor(R.color.view_level_gradient_bottom), Shader.TileMode.MIRROR);
+            shaderPaint.setShader(shaderGradient);
+        }
 
-        starRowView.layout(starRowHorizontalPadding, 2 * starRowHeight, width - starRowHorizontalPadding, 3 * starRowHeight);
+        firstStar.layout(inset, height - inset - starSize, inset + starSize, height - inset);
+        secondStar.layout(inset + starSize, height - inset - starSize, inset + 2 * starSize, height - inset);
+        thirdStar.layout(inset + 2 * starSize, height - inset - starSize, inset + 3 * starSize, height - inset);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (path == null) {
-            calculatePath(getWidth(), getHeight());
-        }
-
+        canvas.drawPath(path, textPaint);
         canvas.drawPath(path, shaderPaint);
-        canvas.drawPath(path, strokePaint);
 
-        if (text != null) {
-            textPaint.setTextSize(getHeight() / 2);
-            textPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText(text, getWidth() / 2, (int) ((getHeight() / 3) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
-        }
+        textPaint.setTextSize(getHeight() / 2);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(String.valueOf(levelNumber), getWidth() / 2, (int) ((getHeight() / 3) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
+
 
         super.onDraw(canvas);
     }
@@ -119,5 +120,9 @@ public class LevelView extends FrameLayout {
         Path path = new Path();
         path.addRoundRect(strokeWidth, strokeWidth, width - strokeWidth, height - strokeWidth, roundRectRadius, roundRectRadius, Path.Direction.CW);
         return path;
+    }
+
+    public void setLevelNumber(int number) {
+        this.levelNumber = number;
     }
 }

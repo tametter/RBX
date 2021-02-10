@@ -12,144 +12,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="196dp"
+        android:layout_height="188dp"
         android:layout_marginTop="36dp"
         android:background="@color/view_levels_card_background"
         android:elevation="4dp"
         android:orientation="vertical">
 
-        <ch.talionis.rbx.views.StarRow
-            android:id="@+id/star_row"
-            android:layout_width="76dp"
-            android:layout_height="30dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp" />
-
-        <LinearLayout
+        <ch.talionis.rbx.views.LevelsView
+            android:id="@+id/levels_view"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="40dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/level_one"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_two"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_three"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_four"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_five"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="118dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/level_six"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_seven"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_eight"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_nine"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/level_ten"
-                layout="@layout/view_level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp" />
 
     </RelativeLayout>
 
