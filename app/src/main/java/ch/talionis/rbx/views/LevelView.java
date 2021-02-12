@@ -1,6 +1,7 @@
 package ch.talionis.rbx.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import ch.talionis.rbx.R;
 
@@ -47,17 +49,17 @@ public class LevelView extends FrameLayout {
         shaderPaint = new Paint();
         shaderPaint.setFlags(ANTI_ALIAS_FLAG);
         shaderPaint.setStyle(FILL);
+        shaderPaint.setColor(getResources().getColor(R.color.white));
 
         textPaint = new Paint();
         textPaint.setFlags(ANTI_ALIAS_FLAG);
         textPaint.setStrokeWidth(getResources().getDimension(R.dimen.view_pentagon_stroke_width));
-        textPaint.setColor(getResources().getColor(R.color.view_level_text_paint));
+        textPaint.setColor(getResources().getColor(R.color.text_dark));
         textPaint.setStyle(FILL);
 
         path = new Path();
 
         roundRectRadius = dpToPx(getContext(), 0);
-        //setElevation(dpToPx(getContext(), 4));
 
         firstStar = new ImageView(getContext(), null);
         firstStar.setImageResource(R.drawable.ic_star_24);
@@ -69,7 +71,7 @@ public class LevelView extends FrameLayout {
         thirdStar.setImageResource(R.drawable.ic_star_24);
         addView(thirdStar);
 
-        setElevation(dpToPx(getContext(), 2));
+        setElevation(dpToPx(getContext(), 4));
     }
 
     @Override
@@ -91,11 +93,11 @@ public class LevelView extends FrameLayout {
         int starSize = (int) (0.3 * width);
         int inset = (int) (0.5f * (width - 3 * starSize));
 
-        if (shaderGradient == null || changed) {
-            View parent = (View) getParent();
-            shaderGradient = new LinearGradient(-getLeft(), -getTop(), parent.getRight(),parent.getBottom(), getResources().getColor(R.color.view_level_gradient_top), getResources().getColor(R.color.view_level_gradient_bottom), Shader.TileMode.MIRROR);
-            shaderPaint.setShader(shaderGradient);
-        }
+//        if (shaderGradient == null || changed) {
+//            View parent = (View) getParent();
+//            shaderGradient = new LinearGradient(-getLeft(), -getTop(), parent.getRight(),parent.getBottom(), getResources().getColor(R.color.view_level_gradient_top), getResources().getColor(R.color.view_level_gradient_bottom), Shader.TileMode.MIRROR);
+//            shaderPaint.setShader(shaderGradient);
+//        }
 
         firstStar.layout(inset, height - inset - starSize, inset + starSize, height - inset);
         secondStar.layout(inset + starSize, height - inset - starSize, inset + 2 * starSize, height - inset);
@@ -109,7 +111,7 @@ public class LevelView extends FrameLayout {
 
         textPaint.setTextSize(getHeight() / 2);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(String.valueOf(levelNumber), getWidth() / 2, (int) ((getHeight() / 3) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
+        canvas.drawText(String.valueOf(levelNumber), getWidth() / 2, (int) ((getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)), textPaint);
 
 
         super.onDraw(canvas);
@@ -124,5 +126,15 @@ public class LevelView extends FrameLayout {
 
     public void setLevelNumber(int number) {
         this.levelNumber = number;
+    }
+
+    public void setStars(int rating) {
+        int activeColor = getResources().getColor(R.color.bg_gradient_bottom);
+        int inactiveColor = getResources().getColor(R.color.light_grey);
+
+        firstStar.setImageTintList(ColorStateList.valueOf(rating > 0 ? activeColor : inactiveColor));
+        secondStar.setImageTintList(ColorStateList.valueOf(rating > 1 ? activeColor : inactiveColor));
+        thirdStar.setImageTintList(ColorStateList.valueOf(rating > 2 ? activeColor : inactiveColor));
+
     }
 }

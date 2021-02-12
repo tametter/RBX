@@ -19,7 +19,7 @@
     <color name="block_empty">#f4f4f2</color>
     <color name="block_movable">#E1B894</color>
 
-    <color name="view_levels_card_background">#ECEBEB</color>
+    <color name="view_levels_card_background">@color/white</color>
 
     <color name="view_star_selected_stroke">@color/bg_gradient_bottom</color>
     <color name="view_star_selected_fill">@color/bg_gradient_bottom</color>
@@ -32,6 +32,10 @@
     <color name="view_level_text_paint">@color/white</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="light_grey">#C3C3C3</color>
+
+
+    <color name="text_dark">#404040</color>
 
 
 </resources>
