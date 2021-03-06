@@ -24,6 +24,9 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.Paint.Style.FILL;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
 import static ch.talionis.rbx.engine.model.Block.BlockType.EMPTY;
+import static ch.talionis.rbx.engine.model.Direction.LEFT;
+import static ch.talionis.rbx.engine.model.Direction.RIGHT;
+import static ch.talionis.rbx.engine.model.Direction.UP;
 import static ch.talionis.rbx.logging.Logger.logV;
 
 public class BlockView extends FrameLayout implements ViewWithCoordinate {
@@ -95,12 +98,12 @@ public class BlockView extends FrameLayout implements ViewWithCoordinate {
                     // A corner
                     PartView partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerLarge);
-                    partView.setRotation(getRotationForDirection(block.to().inverse()));
+                    partView.setRotation(getRotationForCorner(block.from(), block.to()));
                     addView(partView);
 
                     partView = new PartView(getContext(), null);
                     partView.setPathSupplier(BlockViewPathGenerator::cornerSmall);
-                    partView.setRotation(getRotationForDirection(block.to().inverse()));
+                    partView.setRotation(getRotationForCorner(block.from(), block.to()));
                     addView(partView);
                 }
                 break;
@@ -136,6 +139,19 @@ public class BlockView extends FrameLayout implements ViewWithCoordinate {
                 return 270;
             default:
                 return 90;
+        }
+    }
+
+    private float getRotationForCorner(Direction from, Direction to) {
+        switch (from) {
+            case LEFT:
+                return to == Direction.DOWN ? 0 : 90;
+            case RIGHT:
+                return to == UP ? 180 : 270;
+            case UP:
+                return to == LEFT ? 90 : 180;
+            default:
+                return to == RIGHT ? 270 : 0;
         }
     }
 

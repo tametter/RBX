@@ -11,7 +11,7 @@ import static ch.talionis.rbx.generator.StartStep.startWith;
 
 public class LevelGenerator {
     public Level generateLevel() {
-        return startWith(coordinate(6, 6))
+        return startWith(coordinate(5, 5))
                 .then(boardSize())
                 .then(createBlockArray())
                 .then(drawPath())
