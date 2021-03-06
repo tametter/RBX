@@ -7,6 +7,8 @@ import static ch.talionis.rbx.generator.BoardSize.boardSize;
 import static ch.talionis.rbx.generator.CreateBlockArray.createBlockArray;
 import static ch.talionis.rbx.generator.CreateLevel.createLevel;
 import static ch.talionis.rbx.generator.DrawPath.drawPath;
+import static ch.talionis.rbx.generator.RemoveEmptyBlocks.removeEmptyBlocks;
+import static ch.talionis.rbx.generator.Scramble.scramble;
 import static ch.talionis.rbx.generator.StartStep.startWith;
 
 public class LevelGenerator {
@@ -15,6 +17,8 @@ public class LevelGenerator {
                 .then(boardSize())
                 .then(createBlockArray())
                 .then(drawPath())
+                .then(removeEmptyBlocks())
+                .then(scramble())
                 .then(createLevel())
                 .get();
     }
