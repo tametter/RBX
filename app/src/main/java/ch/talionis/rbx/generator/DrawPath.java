@@ -1,12 +1,9 @@
 package ch.talionis.rbx.generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import ch.talionis.rbx.R;
 import ch.talionis.rbx.engine.model.Block;
 import ch.talionis.rbx.engine.model.Coordinate;
 import ch.talionis.rbx.engine.model.Direction;
