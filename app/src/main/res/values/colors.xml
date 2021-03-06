@@ -17,7 +17,7 @@
 
     <color name="block_solid">#555555</color>
     <color name="block_empty">#f4f4f2</color>
-    <color name="block_movable">#E1B894</color>
+    <color name="block_movable">#585481</color>
 
     <color name="view_levels_card_background">@color/white</color>
 

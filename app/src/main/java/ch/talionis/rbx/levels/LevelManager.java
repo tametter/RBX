@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.talionis.rbx.R;
+import ch.talionis.rbx.engine.model.Level;
+import ch.talionis.rbx.generator.LevelGenerator;
 
 public class LevelManager {
     private List<LevelGroup> groups;
+    private LevelGenerator levelGenerator;
 
     public LevelManager() {
         groups = new ArrayList<>();
@@ -18,6 +21,7 @@ public class LevelManager {
         groups.add(new LevelGroup(R.drawable.ic_big_toucan, 0, 7));
         groups.add(new LevelGroup(R.drawable.ic_big_owl, 2, 9));
 
+        levelGenerator = new LevelGenerator();
     }
 
     public int getNumberOfGroups() {
@@ -26,5 +30,9 @@ public class LevelManager {
 
     public LevelGroup getGroup(int index) {
         return groups.get(index);
+    }
+
+    public Level getNextLevel() {
+        return levelGenerator.generateLevel();
     }
 }

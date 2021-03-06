@@ -4,7 +4,7 @@ import android.graphics.Path;
 
 class BlockViewPathGenerator {
     private static final float halfStrokeWidthFactor = 0.05f;
-    private static final float roundRectRadiusFactor = 0.2f;
+    private static final float roundRectRadiusFactor = 0;
 
 
     static Path start(int width, int height) {

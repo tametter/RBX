@@ -67,7 +67,7 @@ public class BlockView extends FrameLayout implements ViewWithCoordinate {
             }
             case START: {
                 PartView partView = new PartView(getContext(), null);
-                partView.setPathSupplier(BlockViewPathGenerator::start);
+                partView.setPathSupplier(BlockViewPathGenerator::end);
                 partView.setRotation(getRotationForDirection(block.to()));
                 addView(partView);
                 break;
