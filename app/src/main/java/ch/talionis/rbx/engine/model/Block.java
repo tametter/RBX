@@ -93,4 +93,8 @@ public class Block {
     public static Block normalConnector(Direction from, Direction to) {
         return new Block(MOVABLE, NORMAL, from, to, false);
     }
+
+    public static Block emptyMovable() {
+        return new Block(MOVABLE, NONE, null, null, false);
+    }
 }

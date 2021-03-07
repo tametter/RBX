@@ -17,8 +17,8 @@ public class BoardSize extends Step<Coordinate, Coordinate> {
         logV(this, "Generating board size with bounds %d, %d", bounds.getX(), bounds.getY());
 
         Random random = new Random();
-        int sizeX = random.nextInt(bounds.getX() - 1) + 2;
-        int sizeY = random.nextInt(bounds.getY() - 1) + 2;
+        int sizeX = random.nextInt(bounds.getX() - 1) + 3;
+        int sizeY = random.nextInt(bounds.getY() - 1) + 3;
         logV(this, "... generated size %d, %d", sizeX, sizeY);
         return coordinate(sizeX, sizeY);
     }

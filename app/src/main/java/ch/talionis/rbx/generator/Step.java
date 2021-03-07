@@ -14,7 +14,7 @@ public abstract class Step<I, O> {
         return step;
     }
 
-    public final O get() {
+    public O get() {
         return output;
     }
 }
