@@ -16,7 +16,7 @@ import static ch.talionis.rbx.engine.model.Block.emptyMovable;
 import static ch.talionis.rbx.engine.model.Coordinate.coordinate;
 
 public class RemoveEmptyBlocks extends Step<Block[][], Block[][]> {
-    private static final float baseChance = 0.2f;
+    private static final float baseChance = 0.3f;
     private static final float chancePerNeighbor = 0.3f;
 
     @Override

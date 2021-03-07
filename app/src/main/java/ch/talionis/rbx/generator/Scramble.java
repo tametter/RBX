@@ -1,5 +1,8 @@
 package ch.talionis.rbx.generator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import ch.talionis.rbx.engine.model.Block;
@@ -19,32 +22,37 @@ public class Scramble extends Step<Block[][], Block[][]> {
 
         Random random = new Random();
 
-        for (int move = 0; move < 1000; move++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
 
-            if (blocks[x][y].getType() != MOVABLE) {
-                continue;
+        List<Coordinate> emptyBlocks = new ArrayList<>();
+        for (int x=0; x<width; x++) {
+            for (int y=0; y<height; y++) {
+                if (blocks[x][y].getType() == EMPTY) {
+                    emptyBlocks.add(coordinate(x, y));
+                }
             }
+        }
 
+        for (int move = 0; move < 1000; move++) {
+            Collections.shuffle(emptyBlocks);
             Direction testDirection = Direction.values()[random.nextInt(Direction.values().length)];
-            Coordinate currentCoordinate = coordinate(x, y);
+            Coordinate currentCoordinate = emptyBlocks.get(0);
             Coordinate movedCoordinate = currentCoordinate.move(testDirection);
-            if (isEmpty(blocks, movedCoordinate.getX(), movedCoordinate.getY())) {
-                blocks[movedCoordinate.getX()][movedCoordinate.getY()] = blocks[x][y];
-                blocks[x][y] = emptyBlock();
+            if (isMovable(blocks, movedCoordinate.getX(), movedCoordinate.getY())) {
+                blocks[currentCoordinate.getX()][currentCoordinate.getY()] = blocks[movedCoordinate.getX()][movedCoordinate.getY()];
+                blocks[movedCoordinate.getX()][movedCoordinate.getY()] = emptyBlock();
+                emptyBlocks.set(0, movedCoordinate);
             }
         }
 
         return blocks;
     }
 
-    private boolean isEmpty(Block[][] blocks, int x, int y) {
+    private boolean isMovable(Block[][] blocks, int x, int y) {
         if (x < 0 || x >= blocks.length || y < 0 || y >= blocks[0].length) {
             return false;
         }
 
-        return blocks[x][y].getType() == EMPTY;
+        return blocks[x][y].getType() == MOVABLE;
     }
 
 
