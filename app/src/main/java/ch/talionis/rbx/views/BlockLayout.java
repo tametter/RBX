@@ -24,7 +24,9 @@ import ch.talionis.rbx.engine.model.Coordinate;
 import ch.talionis.rbx.engine.model.Move;
 import ch.talionis.rbx.engine.model.State;
 import ch.talionis.rbx.functional.AnimationListener;
+import ch.talionis.rbx.sound.Sound;
 
+import static ch.talionis.rbx.activities.ApplicationUtils.getSoundManager;
 import static ch.talionis.rbx.animation.FadeAnimations.fadeIn;
 import static ch.talionis.rbx.animation.FadeAnimations.fadeOut;
 import static ch.talionis.rbx.engine.model.Block.BlockType.ABSENT;
@@ -34,6 +36,8 @@ import static ch.talionis.rbx.engine.model.Direction.LEFT;
 import static ch.talionis.rbx.engine.model.Direction.RIGHT;
 import static ch.talionis.rbx.engine.model.Direction.UP;
 import static ch.talionis.rbx.logging.Logger.logV;
+import static ch.talionis.rbx.sound.Sound.BLOCK_MOVE;
+import static ch.talionis.rbx.sound.Sound.LEVEL_COMPLETE;
 
 public class BlockLayout extends ViewGroup implements EngineObserver {
     private Engine engine;
@@ -210,7 +214,10 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
         animatorSet.setDuration(70);
         animatorSet.playTogether(animators);
 
-        AnimationListener.onAnimationEnd(animatorSet, () -> engine.apply(move));
+        AnimationListener.onAnimationEnd(animatorSet, () -> {
+            engine.apply(move);
+            getSoundManager(getContext()).play(BLOCK_MOVE);
+        });
 
         animatorSet.start();
     }
@@ -235,6 +242,7 @@ public class BlockLayout extends ViewGroup implements EngineObserver {
     @Override
     public void onLevelComplete() {
         fadeOut(this);
+        getSoundManager(getContext()).play(LEVEL_COMPLETE);
     }
 
     @Override
